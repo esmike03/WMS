@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_auto_matching.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_login.xml" value="0.2630208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_main.xml" value="0.2630208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_po.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_po_final_scan.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_po_scan.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_po_view.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_poactivity.xml" value="0.2630208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_price_check.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_rtv.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_rtv_scan.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_rtv_view.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_settings.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_syncfile_view.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_user_manage.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/activity_user_view.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/auto_matching_dialog.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/custom_error_dialog.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/custom_loading_dialog.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/download_from_ftp_dialog.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/pass_selection_dialog.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/reason_code_dialog.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/rv_po_final_validation_layout.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/rv_po_layout.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/rv_rtv_layout.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/rv_syncfile_layout.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/layout/user_rv_layout.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/Windows/AndroidStudioProjects/WaltermartMobileCollector/app/src/main/res/menu/menu_bar.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/layout/activity_po.xml" value="0.25" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/layout/activity_po_scan.xml" value="0.25" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/layout/activity_rtv.xml" value="0.25" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/layout/activity_rtv_scan.xml" value="0.25" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/layout/activity_update_profile.xml" value="0.25" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/layout/activity_user_manage.xml" value="0.25" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/layout/activity_user_view.xml" value="0.25" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/layout/duplicate_scan_dialog.xml" value="0.25" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/layout/user_rv_layout.xml" value="0.25" />
+        <entry key="..\:/Users/progr/Documents/Android Demo App/WaltermartMobileCollector/app/src/main/res/menu/menu_bar.xml" value="0.25" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.zebra.waltermartmobilecollector">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="com.zebra.provider.READ" />
+    <queries>
+        <provider android:authorities="oem_info" />
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_logo"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_logo_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.WaltermartMobileCollector"
+        tools:targetApi="31">
+        <activity
+            android:name=".activities.pcount.PcountReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.stock_count.ScanLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.stock_count.ScanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.stock_count.ViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.stock_count.StockCountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.purchase_order.reports.ListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.purchase_order.reports.WDSAutoMatchingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.purchase_order.auto_matching.wds.WDSAutoMatchingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.purchase_order.reports.AutoMatchingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.pcount.withdrawal.LocationSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.pcount.withdrawal.ScanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.pcount.DashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.pcount.auto_matching.AutoMatchingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.pcount.auto_matching.ListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.pcount.auto_matching.single.SingleAutoMatchingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.pcount.ScanLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.pcount.ScanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.pcount.ViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.pcount.PCountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.purchase_order.auto_matching.OfflineActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.purchase_order.auto_matching.ListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.purchase_order.auto_matching.AutoMatchingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.store_transfer.StoreTransferActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.price_check.PriceCheckActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.store_transfer.ScanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.store_transfer.ViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.syncfile.ViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.user.UpdateProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.user.ManageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.user.ViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.return_to_vendor.ViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.return_to_vendor.ScanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.purchase_order.ScanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.purchase_order.ViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.return_to_vendor.RTVActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.purchase_order.POActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
