@@ -44,8 +44,34 @@ public class POActivity extends BaseActivity {
             findViewById(R.id.btnAM).setBackgroundColor(Color.TRANSPARENT);
             findViewById(R.id.btnReport).setBackgroundColor(Color.TRANSPARENT);
         }
+
+        showModeDialog();
+
     }
 
+    private void showModeDialog() {
+        View view = getLayoutInflater().inflate(R.layout.dialog_po_mode, null);
+        AlertDialog dialog = new AlertDialog
+                .Builder(this)
+                .setCancelable(false)
+                .setView(view)
+                .create();
+
+        view.findViewById(R.id.btnMP2).setOnClickListener(v -> {
+            Globals.poMode = "MP2";
+            dialog.dismiss();
+        });
+        view.findViewById(R.id.btnMPO).setOnClickListener(v -> {
+            Globals.poMode = "MPO";
+            dialog.dismiss();
+        });
+        view.findViewById(R.id.btnPoModeCancel).setOnClickListener(v -> {
+            dialog.dismiss();
+            onClickHome(null); // back to main menu
+        });
+
+        dialog.show();
+    }
     public void onReport(View _){
         View view = getLayoutInflater().inflate(R.layout.dialog_report_type, null);
         AlertDialog dialog = new AlertDialog

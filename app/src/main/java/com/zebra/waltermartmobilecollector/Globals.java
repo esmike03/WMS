@@ -15,7 +15,7 @@ public final class Globals {
     public static boolean singleValidation = false, reportMatch = true;
 
     private static String storeCode, ipAddress, ftpUser, ftpPassword, userRole;
-
+    public static String poMode = null; // "MP2" or "MPO"
     private static boolean isWMS = true;
 
     public static boolean userIsAdmin() {
