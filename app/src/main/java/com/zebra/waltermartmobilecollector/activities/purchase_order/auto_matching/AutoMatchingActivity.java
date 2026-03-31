@@ -41,6 +41,9 @@ public class AutoMatchingActivity extends BaseActivity {
         setContentView(R.layout.activity_auto_matching);
 
 
+        TextView pas2Header = findViewById(R.id.txtPas2);
+        pas2Header.setText(Globals.poMode.equals("MPO") ? "P0" : "P2");
+
         backInto = ListActivity.class;
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -77,8 +80,13 @@ public class AutoMatchingActivity extends BaseActivity {
                 }
             }
 
+// Replace getPas2() call with this branch in onCreate's runThread:
             getPas1();
-            getPas2();
+            if (Globals.poMode.equals("MPO")) {
+                getMasterfileQty(); // reads from pos table instead
+            } else {
+                getPas2();
+            }
 
             saveAutoMatchingReport();
 
@@ -97,6 +105,14 @@ public class AutoMatchingActivity extends BaseActivity {
                 adaptor.notifyDataSetChanged();
             });
         });
+    }
+
+    private void getMasterfileQty() {
+        for (Model model : allData) {
+            if (!Service.setPcsAndFactor(poNo, model.getSku(), model))
+                continue;
+            model.setPas2(String.valueOf(model.getPcs())); // ✅ convert int to String
+        }
     }
 
     private void saveAutoMatchingReport() throws Exception {
@@ -123,14 +139,10 @@ public class AutoMatchingActivity extends BaseActivity {
     }
 
     private void moveFiles() throws Exception {
-        FTP.move(
-                Folders.SCANNED_PO + pas1Filename,
-                reportFolder + pas1Filename
-        );
-        FTP.move(
-                Folders.SCANNED_PO + pas2Filename,
-                reportFolder + pas2Filename
-        );
+        FTP.move(Folders.SCANNED_PO + pas1Filename, reportFolder + pas1Filename);
+        if (Globals.poMode.equals("MP2") && pas2Filename != null) {
+            FTP.move(Folders.SCANNED_PO + pas2Filename, reportFolder + pas2Filename);
+        }
     }
 
     private void createDialog() {

@@ -239,7 +239,7 @@ public final class Service {
         FileService.download(
                 Folders.SCANNED_PO + (!Globals.isWMS()
                         ? currentPO + "_" + Globals.name + ".txt"
-                        : currentPO + "_0_" + Globals.name + ".txt"),
+                        : currentPO + "_1_" + Globals.name + ".txt"),
                 content
         );
     }
@@ -294,33 +294,29 @@ public final class Service {
                     Folders.SCANNED_PO + (
                             !Globals.isWMS()
                                     ? currentPO + "_" + Globals.name + ".txt"
-                                    : currentPO + "_0_" + Globals.name + ".txt"),
+                                    : currentPO + "_1_" + Globals.name + ".txt"),
                     content
             );
         }
     }
 
     private static int getPassNo(FTPFile[] files, String po) {
+        // MP0 always sends as Pass 1
+        if (Globals.poMode.equals("MPO")) return 1;
+
         int last = 0;
         for (FTPFile file : files) {
             if (!file.isFile()) continue;
-
             String[] fn = file.getName().split("\\.");
             if (fn.length < 2) continue;
             String[] sp = fn[0].split("_");
             if (sp.length != 3 || !sp[0].equals(po)) continue;
 
             int nlast;
-            try {
-                nlast = Integer.parseInt(sp[1]);
-            } catch (Exception e) {
-                nlast = 0;
-            }
-            if (sp[2].equals(Globals.name)) {
-                return nlast;
-            } else if (nlast > last) {
-                last = nlast;
-            }
+            try { nlast = Integer.parseInt(sp[1]); } catch (Exception e) { nlast = 0; }
+
+            if (sp[2].equals(Globals.name)) return nlast;
+            else if (nlast > last) last = nlast;
         }
 
         return (last + 1);
