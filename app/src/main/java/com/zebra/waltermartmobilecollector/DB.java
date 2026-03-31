@@ -127,7 +127,7 @@ public class DB extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO users (name,username,password,role) VALUES " +
                 "('SuperAdmin', 'superadmin', '"+password+"', 'Super Admin')");
         db.execSQL("INSERT INTO settings (masterfile_updated_at, is_wms, store,ip_address,ftp_user,ftp_password) VALUES " +
-                "('', 1, '422', '192.168.0.122','ftp-users','1234')");
+                "('', 1, '401', '192.168.0.122','ftp-user','1234')");
     }
 
     private void updates(SQLiteDatabase db){
