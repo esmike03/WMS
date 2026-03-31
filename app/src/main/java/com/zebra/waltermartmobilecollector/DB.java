@@ -8,7 +8,7 @@ import com.zebra.waltermartmobilecollector.services.Encryptor;
 
 public class DB extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 8;
+    private static final int DB_VERSION = 9;
 
     public DB(Context context) {
         super(context, "waltermart_mobile_collector", null, DB_VERSION);
@@ -31,6 +31,9 @@ public class DB extends SQLiteOpenHelper {
                 "ip_address TEXT," +
                 "ftp_user TEXT," +
                 "ftp_password TEXT," +
+                "mms_ip_address TEXT," +
+                "mms_ftp_user TEXT," +
+                "mms_ftp_password TEXT," +
                 "masterfile_updated_at TEXT)");
 
         // buy is the factor
@@ -146,6 +149,7 @@ public class DB extends SQLiteOpenHelper {
         if (oldVersion < 6) v6(db);
         if (oldVersion < 7) v7(db);
         if (oldVersion < 8) v8(db);
+        if (oldVersion < 9) v9(db);
     }
 
     private void v2(SQLiteDatabase db){
@@ -205,4 +209,9 @@ public class DB extends SQLiteOpenHelper {
         db.execSQL("ALTER TABLE scanned_sts ADD COLUMN main_id INTEGER");
     }
 
+    private void v9(SQLiteDatabase db) {
+      db.execSQL("ALTER TABLE settings ADD COLUMN mms_ip_address TEXT DEFAULT ''");
+      db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_user TEXT DEFAULT ''");
+      db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_password TEXT DEFAULT ''");
+    }
 }

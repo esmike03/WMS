@@ -36,4 +36,7 @@ public final class Folders {
     public final static String PER_CASE_STOCK_COUNT = SCANNED_STOCK_COUNT+ "CASE/";
     public final static String PER_PIECE_STOCK_COUNT = SCANNED_STOCK_COUNT+ "PIECE/";
 
+
+    public final static String MMS_FTP_FOLDER = "/MMS/";
+    public final static String MMS_RCR = MMS_FTP_FOLDER + "RCR/";
 }

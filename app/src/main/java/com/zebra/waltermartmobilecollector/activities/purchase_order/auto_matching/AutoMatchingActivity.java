@@ -136,6 +136,10 @@ public class AutoMatchingActivity extends BaseActivity {
             FTP.upload(reportFolder + poNo + "_Report_Unmatched.csv", amModel.getReport());
         }
         FTP.upload(reportFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+
+        if (isMatched) {
+            sendToMMS(amModel);
+        }
     }
 
     private void moveFiles() throws Exception {
@@ -259,6 +263,32 @@ public class AutoMatchingActivity extends BaseActivity {
         FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt());
         FTP.upload(reportFolder + poNo + "_Report_Matched.csv", amModel.getReport());
         FTP.upload(reportFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+
+        sendToMMS(amModel);
+
     }
 
+    private void sendToMMS(AMModel amModel) {
+        try {
+            FTP.loginMMS();
+
+            String mmsFolder = Folders.MMS_RCR + poNo + "/";
+
+            // Create folder structure
+            FTP.makeMmsDirectory(Folders.MMS_FTP_FOLDER);
+            FTP.makeMmsDirectory(Folders.MMS_RCR);
+            FTP.makeMmsDirectory(mmsFolder);
+
+            // Upload matched files
+            FTP.uploadToMMS(mmsFolder + poNo + "_Final.txt", amModel.getFinalTxt());
+            FTP.uploadToMMS(mmsFolder + poNo + "_Receipt.csv", amModel.getReceipt());
+            FTP.uploadToMMS(mmsFolder + poNo + "_Report_Matched.csv", amModel.getReport());
+            FTP.uploadToMMS(mmsFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+
+        } catch (Exception e) {
+            showErrorInThread("Matched but failed to send to MMS: " + e.getMessage());
+        } finally {
+            FTP.disconnectMMS();
+        }
+    }
 }
