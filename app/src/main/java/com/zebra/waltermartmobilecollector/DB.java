@@ -8,7 +8,7 @@ import com.zebra.waltermartmobilecollector.services.Encryptor;
 
 public class DB extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 9;
+    private static final int DB_VERSION = 10;
 
     public DB(Context context) {
         super(context, "waltermart_mobile_collector", null, DB_VERSION);
@@ -93,6 +93,8 @@ public class DB extends SQLiteOpenHelper {
                 + "main_id INTEGER,"
                 + "qty TEXT,"
                 + "si_num TEXT,"
+                + "username TEXT,"
+                + "last_scanned_date TEXT,"
                 + "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,"
                 + "FOREIGN KEY (po_id) REFERENCES pos(id) ON DELETE CASCADE)");
 
@@ -210,8 +212,17 @@ public class DB extends SQLiteOpenHelper {
     }
 
     private void v9(SQLiteDatabase db) {
-      db.execSQL("ALTER TABLE settings ADD COLUMN mms_ip_address TEXT DEFAULT ''");
-      db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_user TEXT DEFAULT ''");
-      db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_password TEXT DEFAULT ''");
+        try {
+            db.execSQL("ALTER TABLE scanned_pos ADD COLUMN username TEXT");
+        } catch (Exception e) {}
+        try {
+            db.execSQL("ALTER TABLE scanned_pos ADD COLUMN last_scanned_date TEXT");
+        } catch (Exception e) {}
+    }
+
+    private void v10(SQLiteDatabase db){
+        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ip_address TEXT DEFAULT ''");
+        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_user TEXT DEFAULT ''");
+        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_password TEXT DEFAULT ''");
     }
 }
