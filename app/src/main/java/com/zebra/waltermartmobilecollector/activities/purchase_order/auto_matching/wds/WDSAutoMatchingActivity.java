@@ -141,7 +141,7 @@ public class WDSAutoMatchingActivity extends BaseActivity {
                 return;
             }
 
-            Service.updateScanned(selectedModel.getId(), newQ);
+            Service.updateScanned(selectedModel.getId(), newQ, "");
 
             selectedModel.setPas3(val);
             adaptor.notifyDataSetChanged();

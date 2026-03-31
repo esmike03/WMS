@@ -34,7 +34,7 @@ public class AutoMatchingActivity extends BaseActivity {
     private AlertDialog dialog;
     private Model selectedModel;
     private TextView txtSKU, txtBarcode, txtDesc;
-    private EditText edtTxtQty;
+    private EditText edtTxtQty, edtSI;
     private String reportFolder;
     private boolean isMatched = true, submitted = false, matched = false, hasReportMatched = false;
     private int loopCounter = 0, totalBox = 0, totalPcs = 0, totalSKU=0;
@@ -221,7 +221,7 @@ public class AutoMatchingActivity extends BaseActivity {
     }
 
     private void saveReport() throws Exception {
-        AMModel amModel = ReportService.get(allData, poNo);
+        AMModel amModel = ReportService.get(allData, poNo, edtSI.getText().toString().trim());
 
         FTP.upload(reportFolder + poNo + "_Receipt.csv", amModel.getReceipt());
         FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt());

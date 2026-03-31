@@ -32,9 +32,10 @@ public class ScanLocationActivity extends ScanBaseActivity {
     }
 
     @Override
-    public void scanProcess(String data) {
+    public boolean scanProcess(String data) {
         location = data.trim();
         instruct.setText(location);
+        return true;
     }
 
     public void onOK(View _){

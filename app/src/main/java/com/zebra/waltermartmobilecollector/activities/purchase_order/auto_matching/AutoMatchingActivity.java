@@ -30,7 +30,7 @@ public class AutoMatchingActivity extends BaseActivity {
     private AlertDialog dialog;
     private Model selectedModel;
     private TextView txtSKU, txtBarcode, txtDesc;
-    private EditText edtTxtQty;
+    private EditText edtTxtQty,edtSI;
     private String pas1Filename, pas2Filename, reportFolder;
     private boolean isMatched = true, submitted = false;
     private int totalBoxExpected = 0, totalPcsExpected = 0;
@@ -62,6 +62,7 @@ public class AutoMatchingActivity extends BaseActivity {
         pas1Filename = intent.getStringExtra("pas1_filename");
         pas2Filename = intent.getStringExtra("pas2_filename");
         poNo = intent.getStringExtra("po_number");
+        edtSI = findViewById(R.id.edtSI);
 
         allData = Service.getPerPOWithDescWithPas3(poNo);
 
@@ -99,7 +100,7 @@ public class AutoMatchingActivity extends BaseActivity {
     }
 
     private void saveAutoMatchingReport() throws Exception {
-        AMModel amModel = ReportService.getWithoutPas3(allData, poNo);
+        AMModel amModel = ReportService.getWithoutPas3(allData, poNo, edtSI.getText().toString().trim());
         totalBoxExpected = amModel.getTotalBoxExpected();
         totalPcsExpected = amModel.getTotalPcsExpected();
         isMatched = amModel.isMatched();
@@ -163,7 +164,9 @@ public class AutoMatchingActivity extends BaseActivity {
                 return;
             }
 
-            Service.updateScanned(selectedModel.getId(), newQ);
+            String siNum = edtSI.getText().toString().trim();
+            Service.updateScanned(selectedModel.getId(), newQ, siNum);
+            Service.updateSiNum(poNo, siNum); // ← save SI to all rows of this PO
 
             selectedModel.setPas3(val);
             adaptor.notifyDataSetChanged();
@@ -195,6 +198,10 @@ public class AutoMatchingActivity extends BaseActivity {
                 Folders.SCANNED_PO,
                 pas1Filename,
                 (statement, rows) -> {
+                    if (rows.size() > 3 && edtSI.getText().toString().isEmpty()) {
+                        runOnUiThread(() -> edtSI.setText(rows.get(3)));
+                    }
+
                     Model model = Service.getPas3Model(rows.get(1), allData);
                     if (model != null)
                         model.setPas1(rows.get(2));
@@ -234,7 +241,7 @@ public class AutoMatchingActivity extends BaseActivity {
     }
 
     private void saveReport() throws Exception {
-        AMModel amModel = ReportService.get(allData, poNo);
+        AMModel amModel = ReportService.get(allData, poNo, edtSI.getText().toString().trim());
 
         FTP.upload(reportFolder + poNo + "_Receipt.csv", amModel.getReceipt());
         FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt());

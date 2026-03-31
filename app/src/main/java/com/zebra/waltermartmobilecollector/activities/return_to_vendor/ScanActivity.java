@@ -50,9 +50,9 @@ public class ScanActivity extends ScanBaseActivity {
     }
 
     @Override
-    public void scanProcess(String data) {
+    public boolean scanProcess(String data) {
         if (spinner.getSelectedItemPosition() < 0)
-            return;
+            return true;
 
         scannedRTV = Service.scannedDetails(data, codes.get(spinner.getSelectedItemPosition()));
 
@@ -60,14 +60,14 @@ public class ScanActivity extends ScanBaseActivity {
             onCancel(null);
             hideKeyboard(qty);
             showError("Barcode not found!!!");
-            return;
+            return false;
         }
 
         if (!scannedRTV.isAllowed()) {
             onCancel(null);
             hideKeyboard(qty);
             showError("This item is not allowed in RTV!!!");
-            return;
+            return false;
         }
 
         qty.setText("");
@@ -80,6 +80,7 @@ public class ScanActivity extends ScanBaseActivity {
         showDuplicateDialog(scannedRTV.getUpdatedQty());
 
         showKeyboard(qty);
+        return true;
     }
 
 }

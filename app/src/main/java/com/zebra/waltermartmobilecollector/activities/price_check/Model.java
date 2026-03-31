@@ -2,17 +2,17 @@ package com.zebra.waltermartmobilecollector.activities.price_check;
 
 public class Model {
 
-    private String barcode,desc,sku,rPrice,pPrice,vendorCode;
-    private boolean outright;
+    private String barcode, desc, sku, rPrice, pPrice, vendorCode, type;
+//    private boolean outright;
 
-    public Model(String barcode, String desc, String sku, String rPrice, String pPrice, String vendorCode, boolean outright) {
+    public Model(String barcode, String desc, String sku, String rPrice, String pPrice, String vendorCode, String type) {
         this.barcode = barcode;
         this.desc = desc;
         this.sku = sku;
         this.rPrice = rPrice;
         this.pPrice = pPrice;
         this.vendorCode = vendorCode;
-        this.outright = outright;
+        this.type = type;
     }
 
     public String getBarcode() {
@@ -39,7 +39,12 @@ public class Model {
         return vendorCode;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public boolean isOutright() {
-        return outright;
+        return type.equals("Outright");
+//        return outright;
     }
 }

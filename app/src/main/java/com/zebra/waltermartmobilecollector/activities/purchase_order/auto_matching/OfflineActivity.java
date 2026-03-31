@@ -44,7 +44,7 @@ public class OfflineActivity extends BaseActivity {
     private AlertDialog dialog;
     private Model selectedModel;
     private TextView txtSKU, txtBarcode, txtDesc, fFile, sFile;
-    private EditText edtTxtQty;
+    private EditText edtTxtQty, edtSI;
     private String pas1Filename, pas2Filename, reportFolder, pas1Filepath, pas2Filepath;
     private boolean isMatched = true, submitted = false;
     private int totalBoxExpected = 0, totalPcsExpected = 0;
@@ -124,7 +124,7 @@ public class OfflineActivity extends BaseActivity {
     }
 
     private void saveAutoMatchingReport() {
-        AMModel amModel = ReportService.getWithoutPas3(allData, poNo);
+        AMModel amModel = ReportService.getWithoutPas3(allData, poNo, edtSI.getText().toString().trim());
         totalBoxExpected = amModel.getTotalBoxExpected();
         totalPcsExpected = amModel.getTotalPcsExpected();
         isMatched = amModel.isMatched();
@@ -236,7 +236,7 @@ public class OfflineActivity extends BaseActivity {
                 return;
             }
 
-            Service.updateScanned(selectedModel.getId(), newQ);
+            Service.updateScanned(selectedModel.getId(), newQ, "");
 
             selectedModel.setPas3(val);
             adaptor.notifyDataSetChanged();
@@ -249,7 +249,7 @@ public class OfflineActivity extends BaseActivity {
     }
 
     public void onSubmit(View v) {
-        AMModel amModel = ReportService.get(allData, poNo);
+        AMModel amModel = ReportService.get(allData, poNo, edtSI.getText().toString().trim());
 
         try {
             FileService.download(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt());

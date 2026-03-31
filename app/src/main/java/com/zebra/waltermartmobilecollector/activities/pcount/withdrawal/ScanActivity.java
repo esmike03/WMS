@@ -63,18 +63,18 @@ public class ScanActivity extends ScanBaseActivity {
     }
 
     @Override
-    public void scanProcess(String data) {
+    public boolean scanProcess(String data) {
         scannedItem = Service.findItem(data);
         if (scannedItem == null) {
             hideDetailsLayout();
             showError("Barcode not found!!!");
-            return;
+            return false;
         }
         WModel model = findBarcode(data);
         if (model == null) {
             hideDetailsLayout();
             showError("This item is not in this location!!!");
-            return;
+            return false;
         }
 
         scannedItem.setBarcode(data);
@@ -84,6 +84,8 @@ public class ScanActivity extends ScanBaseActivity {
         sku.setText(scannedItem.getSku());
         vendor.setText(scannedItem.getVendor());
         showDetailsLayout();
+
+        return true;
     }
 
     @Override

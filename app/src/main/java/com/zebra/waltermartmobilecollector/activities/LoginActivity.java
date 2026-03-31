@@ -2,7 +2,12 @@ package com.zebra.waltermartmobilecollector.activities;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -32,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (Globals.db == null) {
             String serial = SerialHelper.get(getContentResolver());
-
+            Log.d("TAG", "onCreate: " + serial);
             if (serial == null || !SerialNumbers.has(serial)) {
                 finish();
                 return;
@@ -40,7 +45,13 @@ public class LoginActivity extends AppCompatActivity {
 
             Globals.db = new DB(this).getWritableDatabase();
 
-            Barcode.createProfile(this);
+            Barcode.createProfile(this, getResources().getString(R.string.app_name));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
+            }
         }
 
 //        go();
@@ -60,9 +71,9 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            try{
+            try {
                 pass = Encryptor.encrypt(pass);
-            } catch (Exception e){
+            } catch (Exception e) {
                 Helper.showError(e.getMessage());
                 return;
             }

@@ -42,6 +42,7 @@ public class DataAdaptor  extends RecyclerView.Adapter<DataAdaptor.ViewHolder> {
         Model po = list.get(position);
 
         holder.po.setText(po.getPo());
+        holder.si.setText(po.getSi());
         holder.sku.setText(po.getSku());
         holder.desc.setText(po.getDesc());
         holder.qty.setText(po.getQty() + "");
@@ -53,10 +54,11 @@ public class DataAdaptor  extends RecyclerView.Adapter<DataAdaptor.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView po, sku, desc, qty;
+        TextView po, sku, desc, qty, si;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             po = itemView.findViewById(R.id.po);
+            si = itemView.findViewById(R.id.siNum);
             sku = itemView.findViewById(R.id.name);
             desc = itemView.findViewById(R.id.desc);
             qty = itemView.findViewById(R.id.qty);

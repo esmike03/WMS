@@ -47,20 +47,20 @@ public class ScanActivity extends ScanBaseActivity {
     }
 
     @Override
-    public void scanProcess(String data) {
+    public boolean scanProcess(String data) {
         scanned = Service.scannedDetails(data);
 
         if (scanned == null) {
             onCancel(null);
             showError("Barcode not Found!!!");
-            return;
+            return false;
         }
 
         if (!scanned.isOutright()) {
             onCancel(null);
             showError("CONCESS ITEM DO NOT COUNT!!!");
             scanned = null;
-            return;
+            return false;
         }
 
         instruction.setVisibility(View.GONE);
@@ -73,12 +73,13 @@ public class ScanActivity extends ScanBaseActivity {
             int newQ = scanned.getQty() + 1;
             qty.setText(newQ + "");
             Service.updateScanned(scanned.getMainID(), newQ);
-            return;
+            return true;
         }
 
         qty.setText("");
         showDuplicateDialog(scanned.getQty() == 0 ? null : (scanned.getQty() + ""));
         showKeyboard(qty);
+        return true;
     }
 
     @Override

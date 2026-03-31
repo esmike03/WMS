@@ -8,7 +8,7 @@ import com.zebra.waltermartmobilecollector.services.Encryptor;
 
 public class DB extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 6;
+    private static final int DB_VERSION = 7;
 
     public DB(Context context) {
         super(context, "waltermart_mobile_collector", null, DB_VERSION);
@@ -88,6 +88,7 @@ public class DB extends SQLiteOpenHelper {
                 + "user_id INTEGER,"
                 + "po_id INTEGER,"
                 + "qty TEXT,"
+                + "si_num TEXT,"
                 + "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,"
                 + "FOREIGN KEY (po_id) REFERENCES pos(id) ON DELETE CASCADE)");
 
@@ -106,6 +107,7 @@ public class DB extends SQLiteOpenHelper {
                 + "from_loc TEXT,"
                 + "to_loc TEXT,"
                 + "qty TEXT,"
+                + "si_num TEXT,"
                 + "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,"
                 + "FOREIGN KEY (main_id) REFERENCES main(id) ON DELETE CASCADE)");
 
@@ -128,25 +130,19 @@ public class DB extends SQLiteOpenHelper {
     }
 
     private void updates(SQLiteDatabase db){
-        v2(db);
         v3(db);
-        v4(db);
         v5(db);
         v6(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 2)
-            v2(db);
-        if (oldVersion < 3)
-            v3(db);
-        if (oldVersion < 4)
-            v4(db);
-        if (oldVersion < 5)
-            v5(db);
-        if (oldVersion < 6)
-            v6(db);
+        if (oldVersion < 2) v2(db);
+        if (oldVersion < 3) v3(db);
+        if (oldVersion < 4) v4(db);
+        if (oldVersion < 5) v5(db);
+        if (oldVersion < 6) v6(db);
+        if (oldVersion < 7) v7(db);
     }
 
     private void v2(SQLiteDatabase db){
@@ -193,6 +189,11 @@ public class DB extends SQLiteOpenHelper {
                 "qty TEXT," +
                 "FOREIGN KEY (parent_id) REFERENCES main(id) ON DELETE CASCADE," +
                 "FOREIGN KEY (child_id) REFERENCES main(id) ON DELETE CASCADE)");
+    }
+
+    private void v7(SQLiteDatabase db){
+        db.execSQL("ALTER TABLE scanned_pos ADD COLUMN si_num TEXT");
+        db.execSQL("ALTER TABLE scanned_sts ADD COLUMN si_num TEXT");
     }
 
 }

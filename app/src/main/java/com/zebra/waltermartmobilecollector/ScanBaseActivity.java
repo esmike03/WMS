@@ -25,6 +25,7 @@ public class ScanBaseActivity extends BaseActivity {
     private AlertDialog manualInputDialog;
     private int act = 0;
     public EditText qty;
+
     private String updatedQty;
 
     @Override
@@ -34,7 +35,8 @@ public class ScanBaseActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
-    public void scanProcess(String data) {
+    public boolean scanProcess(String data) {
+        return true;
     }
 
     public void saveProcess(int newQ) {
@@ -84,6 +86,7 @@ public class ScanBaseActivity extends BaseActivity {
         detailsLayout = findViewById(R.id.detailsLayout);
         instruction = findViewById(R.id.instruction);
         qty = findViewById(R.id.edtTxtQty);
+
     }
 
     public void showDetailsLayout() {
@@ -180,9 +183,10 @@ public class ScanBaseActivity extends BaseActivity {
                     return true;
                 }
 
-                scanProcess(input.getText().toString());
-                input.setText("");
-                manualInputDialog.dismiss();
+                if (scanProcess(input.getText().toString())) {
+                    input.setText("");
+                    manualInputDialog.dismiss();
+                }
                 return false;
             });
 
@@ -196,9 +200,10 @@ public class ScanBaseActivity extends BaseActivity {
                     input.requestFocus();
                     return;
                 }
-                scanProcess(input.getText().toString());
-                input.setText("");
-                manualInputDialog.dismiss();
+                if (scanProcess(input.getText().toString())){
+                    input.setText("");
+                    manualInputDialog.dismiss();
+                }
             });
         }
 

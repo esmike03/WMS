@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import android.text.InputFilter;
 import com.zebra.waltermartmobilecollector.Folders;
 import com.zebra.waltermartmobilecollector.Globals;
 import com.zebra.waltermartmobilecollector.Helper;
@@ -21,8 +21,8 @@ public class ScanActivity extends ScanBaseActivity {
 
     private String poNo;
     private Model scannedPO;
-    private TextView txtPO, desc, sku, barcode;
-    private EditText po;
+    private TextView txtPO, txtSI, desc, sku, barcode;
+    private EditText po, si;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +32,12 @@ public class ScanActivity extends ScanBaseActivity {
         setDefaultLayoutID();
 
         txtPO = findViewById(R.id.po);
+        txtSI = findViewById(R.id.si);
         desc = findViewById(R.id.desc);
         sku = findViewById(R.id.txtSKU);
         barcode = findViewById(R.id.txtBarcode);
         po = findViewById(R.id.edtTxtPO);
+        si = findViewById(R.id.edtTxtSI);
 
         createBarcodeHandler();
         setKeyListener();
@@ -44,6 +46,28 @@ public class ScanActivity extends ScanBaseActivity {
     }
 
     private void setKeyListener() {
+        si.setFilters(new InputFilter[]{
+                (source, start, end, dest, dstart, dend) -> {
+                    String filtered = source.toString().replaceAll("[^0-9/]", "");
+                    return filtered;
+                }
+        });
+        si.setOnKeyListener((view, i, keyEvent) -> {
+            if (i != EditorInfo.IME_ACTION_SEARCH && i != EditorInfo.IME_ACTION_DONE && keyEvent.getKeyCode() != KeyEvent.KEYCODE_ENTER)
+                return false;
+            if (keyEvent.getAction() != KeyEvent.ACTION_DOWN) return false;
+
+            String s = si.getText().toString().trim();
+            if (s.isEmpty()) {
+                si.setError("This is required");
+                return true;
+            }
+
+            si.setVisibility(View.GONE);
+            txtSI.setVisibility(View.VISIBLE);
+            txtSI.setText("SI Number:  " + s);
+            return true;
+        });
         po.setOnKeyListener((view, i, keyEvent) -> {
             if (i != EditorInfo.IME_ACTION_SEARCH && i != EditorInfo.IME_ACTION_DONE && keyEvent.getKeyCode() != KeyEvent.KEYCODE_ENTER)
                 return false;
@@ -195,15 +219,15 @@ public class ScanActivity extends ScanBaseActivity {
     }
 
     @Override
-    public void scanProcess(String data) {
-        if (poNo == null) return;
+    public boolean scanProcess(String data) {
+        if (poNo == null) return true;
 
         scannedPO = Service.scannedDetails(poNo, data);
 
         if (scannedPO == null) {
             onCancel(null);
             showError("Barcode not Found!!!");
-            return;
+            return false;
         }
 
         qty.setText("");
@@ -216,6 +240,7 @@ public class ScanActivity extends ScanBaseActivity {
         showDuplicateDialog(scannedPO.getUpdatedQty());
 
         showKeyboard(qty);
+        return true;
     }
 
     @Override
@@ -236,7 +261,7 @@ public class ScanActivity extends ScanBaseActivity {
             return;
         }
 
-        Service.updateScanned(scannedPO.getId(), scannedPO.getMainID(), newQ);
+        Service.updateScanned(scannedPO.getId(), scannedPO.getMainID(), newQ, txtSI.getText().toString().replace("SI Number: ", "").trim());
 
         showSuccess("Successfully saved.");
         onCancel(null);

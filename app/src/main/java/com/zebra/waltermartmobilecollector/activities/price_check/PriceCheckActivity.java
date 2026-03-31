@@ -32,14 +32,14 @@ public class PriceCheckActivity extends ScanBaseActivity {
     }
 
     @Override
-    public void scanProcess(String data) {
-        if (data.equals("")) return;
+    public boolean scanProcess(String data) {
+        if (data.equals("")) return false;
 
         Model model = Service.find(data);
         if (model == null) {
             hideDetailsLayout();
             Helper.showError("Barcode not found!!!");
-            return;
+            return false;
         }
 
         barcode.setText(model.getBarcode());
@@ -48,18 +48,21 @@ public class PriceCheckActivity extends ScanBaseActivity {
         rPrice.setText(model.getrPrice());
         pPrice.setText(model.getpPrice());
         vendor.setText(model.getVendorCode());
+        itemType.setText(model.getType());
 
         if (model.isOutright()) {
-            itemType.setText("Outright");
+//            itemType.setText("Outright");
             itemType.setTextColor(Color.parseColor("#006400"));
             barcode.setTextColor(Color.parseColor("#006400"));
         } else {
-            itemType.setText("Concess");
+//            itemType.setText("Concess");
             itemType.setTextColor(Color.RED);
             barcode.setTextColor(Color.RED);
         }
 
         showDetailsLayout();
+
+        return true;
     }
 
 }

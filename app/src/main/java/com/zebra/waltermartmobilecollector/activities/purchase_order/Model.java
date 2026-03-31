@@ -3,7 +3,7 @@ package com.zebra.waltermartmobilecollector.activities.purchase_order;
 import com.zebra.waltermartmobilecollector.Helper;
 
 public class Model {
-    private String id, po, sku, desc, updatedQty, barcode, mainID;
+    private String id, po, sku, desc, updatedQty, barcode, mainID, si;
     private int qty, factor;
 
     public Model(String po, String sku, String desc, String qty, String factor) {
@@ -14,7 +14,7 @@ public class Model {
         this.factor = Helper.convertToIntAndRemoveDot(factor);
     }
 
-    public Model(String po, String sku, String desc, String qty) {
+    public Model(String po,String sku, String desc, String qty) {
         this.po = po;
         this.sku = sku;
         this.desc = desc;
@@ -41,6 +41,13 @@ public class Model {
 
     public String getPo() {
         return po;
+    }
+
+    public String getSi() {
+        return si;
+    }
+    public void setSi(String si) {
+        this.si = si;
     }
 
     public String getSku() {

@@ -24,18 +24,21 @@ public final class Service {
 
     public static void get(int start, int limit, ArrayList<com.zebra.waltermartmobilecollector.activities.purchase_order.Model> data) {
         Cursor c = Globals.db.rawQuery(
-                "SELECT p.po,p.sku,m.description,s.qty from pos p " +
+                "SELECT p.po, p.sku, m.description, s.qty, s.si_num from pos p " +
                         "inner join scanned_pos s on p.id=s.po_id and s.user_id=" + Globals.userId +
                         " inner join main m on m.sku=p.sku " +
                         " group by p.sku LIMIT " + limit + " OFFSET " + start
                 , null);
         while (c.moveToNext()) {
-            data.add(new com.zebra.waltermartmobilecollector.activities.purchase_order.Model(
-                    c.getString(0),
-                    c.getString(1),
-                    c.getString(2),
-                    c.getString(3)
-            ));
+            com.zebra.waltermartmobilecollector.activities.purchase_order.Model model =
+                    new com.zebra.waltermartmobilecollector.activities.purchase_order.Model(
+                            c.getString(0),
+                            c.getString(1),
+                            c.getString(2),
+                            c.getString(3)
+                    );
+            model.setSi(c.getString(4));
+            data.add(model);
         }
         c.close();
     }
@@ -166,7 +169,7 @@ public final class Service {
             }
 
             Cursor c = Globals.db.rawQuery(
-                    "select p.po,p.sku,s.qty,p.factor from scanned_pos s " +
+                    "select p.po, p.sku, s.qty, p.factor, s.si_num from scanned_pos s " +
                             "inner join pos p on p.id=s.po_id " +
                             " where s.user_id=" + Globals.userId + " order by p.po",
                     null
@@ -192,10 +195,12 @@ public final class Service {
                 int qty = Helper.convertToIntAndRemoveDot(c.getString(2));
                 int multiplier = Helper.convertToIntAndRemoveDot(c.getString(3));
                 int totalQty = qty * multiplier;
+                String siNum = c.getString(4) != null ? c.getString(4) : "";
                 stringBuffer
                         .append(c.getString(0)).append(",")
                         .append(c.getString(1)).append(",")
-                        .append(totalQty).append("\n");
+                        .append(totalQty).append(",")
+                        .append(siNum).append("\n");
             }
 
             if (stringBuffer.length() == 0) return;
@@ -217,6 +222,16 @@ public final class Service {
         }
     }
 
+    public static void updateSiNum(String po, String siNum) {
+        ContentValues values = new ContentValues();
+        values.put("si_num", siNum);
+        Globals.db.update(
+                "scanned_pos",
+                values,
+                "po_id IN (SELECT id FROM pos WHERE po=?) AND user_id=" + Globals.userId,
+                new String[]{po}
+        );
+    }
     private static void downloadToLocal(String currentPO, String content) throws Exception {
         File folder = new File(Environment.getExternalStorageDirectory() + Folders.SCANNED_PO);
         if (!folder.exists())
@@ -311,13 +326,14 @@ public final class Service {
         return (last + 1);
     }
 
-    public static void updateScanned(String id, int qty) {
-        updateScanned(id, null, qty);
+    public static void updateScanned(String id, int qty, String si) {
+        updateScanned(id, null, qty, si);
     }
 
-    public static void updateScanned(String id, String mainID, int qty) {
+    public static void updateScanned(String id, String mainID, int qty, String siNum) {
         ContentValues values = new ContentValues();
         values.put("qty", qty);
+        values.put("si_num", siNum);
 
         int row = Globals.db.update("scanned_pos", values, "po_id=? and user_id=" + Globals.userId, new String[]{id});
 

@@ -8,8 +8,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.zebra.waltermartmobilecollector.R;
-
 public final class Barcode {
 
     private static String filterAction = "";
@@ -34,8 +32,7 @@ public final class Barcode {
         act.sendBroadcast(dwIntent);
     }
 
-    public static void createProfile(Activity act) {
-        String appName = act.getResources().getString(R.string.app_name);
+    public static void createProfile(Activity act, String appName) {
         // DataWedge configuration
         sendDataWedgeIntentWithExtra(
                 act,
