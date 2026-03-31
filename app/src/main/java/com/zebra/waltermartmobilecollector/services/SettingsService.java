@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 public final class SettingsService {
 
     public static void fetchSettings() {
-        Cursor c = Globals.db.rawQuery("select * from settings", null);
+        Cursor c = Globals.db.rawQuery("select is_wms, store, ip_address, ftp_user, ftp_password, mms_ip_address, mms_ftp_user, mms_ftp_password, masterfile_updated_at from settings", null);
         while (c.moveToNext()) {
             Globals.setSettings(
                     c.getString(0).equals("1"),
@@ -21,14 +21,12 @@ public final class SettingsService {
                     c.getString(3),
                     c.getString(4)
             );
-            // MMS settings — columns 5,6,7
-            if (c.getColumnCount() > 5) {
-                Globals.setMmsSettings(
-                        c.getString(5), // mms_ip_address
-                        c.getString(6), // mms_ftp_user
-                        c.getString(7)  // mms_ftp_password
-                );
-            }
+            Globals.setMmsSettings(
+                    c.getString(5),
+                    c.getString(6),
+                    c.getString(7)
+            );
+            Globals.masterfileUpdatedAt = c.getString(8);
         }
         c.close();
     }
