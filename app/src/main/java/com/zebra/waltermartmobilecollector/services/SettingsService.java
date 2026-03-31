@@ -13,8 +13,7 @@ public final class SettingsService {
 
     public static void fetchSettings() {
         Cursor c = Globals.db.rawQuery("select * from settings", null);
-
-        while (c.moveToNext())
+        while (c.moveToNext()) {
             Globals.setSettings(
                     c.getString(0).equals("1"),
                     c.getString(1),
@@ -22,8 +21,18 @@ public final class SettingsService {
                     c.getString(3),
                     c.getString(4)
             );
+            // MMS settings — columns 5,6,7
+            if (c.getColumnCount() > 5) {
+                Globals.setMmsSettings(
+                        c.getString(5), // mms_ip_address
+                        c.getString(6), // mms_ftp_user
+                        c.getString(7)  // mms_ftp_password
+                );
+            }
+        }
         c.close();
     }
+
 
     public static void fetchMasterfileUpdatedAt() {
         Cursor c = Globals.db.rawQuery("select masterfile_updated_at from settings limit 1", null);
@@ -55,4 +64,12 @@ public final class SettingsService {
         Globals.resetSettings();
     }
 
+    public static void updateMMS(String ip, String user, String password) {
+        ContentValues values = new ContentValues();
+        values.put("mms_ip_address", ip);
+        values.put("mms_ftp_user", user);
+        values.put("mms_ftp_password", password);
+        Globals.db.update("settings", values, null, null);
+        Globals.resetSettings();
+    }
 }

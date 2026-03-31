@@ -15,10 +15,15 @@ public final class Globals {
     public static boolean singleValidation = false, reportMatch = true;
 
     private static String storeCode, ipAddress, ftpUser, ftpPassword, userRole;
+//    public static String poMode = MP2; // "MP2" or "MPO"
+    public static String poMode = null; // default
 
     public static String poMode = null; // "MP2" or "MPO"
 
     private static boolean isWMS = true;
+
+    private static String mmsIpAddress, mmsFtpUser, mmsFtpPassword;
+
 
     public static boolean userIsAdmin() {
         return userRole.equals("Admin");
@@ -32,6 +37,10 @@ public final class Globals {
     public static void setUserRole(String role) {
         userRole = role;
     }
+
+    public static String getMmsIpAddress() { return mmsIpAddress; }
+    public static String getMmsFtpUser() { return mmsFtpUser; }
+    public static String getMmsFtpPassword() { return mmsFtpPassword; }
 
     public static String getLocalStoreCode() {
         if (storeCode == null)
@@ -90,6 +99,17 @@ public final class Globals {
         ftpUser = null;
         ftpPassword = null;
         isWMS = true;
+        mmsIpAddress = null;
+        mmsFtpUser = null;
+        mmsFtpPassword = null;
     }
+
+    public static void setMmsSettings(String ip, String user, String password) {
+        mmsIpAddress = ip;
+        mmsFtpUser = user;
+        mmsFtpPassword = password;
+    }
+
+
 
 }

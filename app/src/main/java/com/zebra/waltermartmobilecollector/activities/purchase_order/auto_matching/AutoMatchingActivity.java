@@ -41,6 +41,9 @@ public class AutoMatchingActivity extends BaseActivity {
         setContentView(R.layout.activity_auto_matching);
 
 
+        TextView pas2Header = findViewById(R.id.txtPas2);
+        pas2Header.setText(Globals.poMode.equals("MPO") ? "P0" : "P2");
+
         backInto = ListActivity.class;
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -77,8 +80,13 @@ public class AutoMatchingActivity extends BaseActivity {
                 }
             }
 
+// Replace getPas2() call with this branch in onCreate's runThread:
             getPas1();
-            getPas2();
+            if (Globals.poMode.equals("MPO")) {
+                getMasterfileQty(); // reads from pos table instead
+            } else {
+                getPas2();
+            }
 
             saveAutoMatchingReport();
 
@@ -97,6 +105,14 @@ public class AutoMatchingActivity extends BaseActivity {
                 adaptor.notifyDataSetChanged();
             });
         });
+    }
+
+    private void getMasterfileQty() {
+        for (Model model : allData) {
+            if (!Service.setPcsAndFactor(poNo, model.getSku(), model))
+                continue;
+            model.setPas2(String.valueOf(model.getPcs())); // ✅ convert int to String
+        }
     }
 
     private void saveAutoMatchingReport() throws Exception {
@@ -120,17 +136,17 @@ public class AutoMatchingActivity extends BaseActivity {
             FTP.upload(reportFolder + poNo + "_Report_Unmatched.csv", amModel.getReport());
         }
         FTP.upload(reportFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+
+        if (isMatched) {
+            sendToMMS(amModel);
+        }
     }
 
     private void moveFiles() throws Exception {
-        FTP.move(
-                Folders.SCANNED_PO + pas1Filename,
-                reportFolder + pas1Filename
-        );
-        FTP.move(
-                Folders.SCANNED_PO + pas2Filename,
-                reportFolder + pas2Filename
-        );
+        FTP.move(Folders.SCANNED_PO + pas1Filename, reportFolder + pas1Filename);
+        if (Globals.poMode.equals("MP2") && pas2Filename != null) {
+            FTP.move(Folders.SCANNED_PO + pas2Filename, reportFolder + pas2Filename);
+        }
     }
 
     private void createDialog() {
@@ -247,6 +263,32 @@ public class AutoMatchingActivity extends BaseActivity {
         FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt());
         FTP.upload(reportFolder + poNo + "_Report_Matched.csv", amModel.getReport());
         FTP.upload(reportFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+
+        sendToMMS(amModel);
+
     }
 
+    private void sendToMMS(AMModel amModel) {
+        try {
+            FTP.loginMMS();
+
+            String mmsFolder = Folders.MMS_RCR + poNo + "/";
+
+            // Create folder structure
+            FTP.makeMmsDirectory(Folders.MMS_FTP_FOLDER);
+            FTP.makeMmsDirectory(Folders.MMS_RCR);
+            FTP.makeMmsDirectory(mmsFolder);
+
+            // Upload matched files
+            FTP.uploadToMMS(mmsFolder + poNo + "_Final.txt", amModel.getFinalTxt());
+            FTP.uploadToMMS(mmsFolder + poNo + "_Receipt.csv", amModel.getReceipt());
+            FTP.uploadToMMS(mmsFolder + poNo + "_Report_Matched.csv", amModel.getReport());
+            FTP.uploadToMMS(mmsFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+
+        } catch (Exception e) {
+            showErrorInThread("Matched but failed to send to MMS: " + e.getMessage());
+        } finally {
+            FTP.disconnectMMS();
+        }
+    }
 }

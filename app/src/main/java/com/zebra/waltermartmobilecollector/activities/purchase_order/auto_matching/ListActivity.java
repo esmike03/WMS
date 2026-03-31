@@ -39,7 +39,7 @@ public class ListActivity extends BaseActivity {
                             : WDSAutoMatchingActivity.class
             );
             intent.putExtra("pas1_filename", model.getPas1());
-            if (Globals.isWMS())
+            if (Globals.isWMS() && Globals.poMode.equals("MP2"))
                 intent.putExtra("pas2_filename", model.getPas2());
             intent.putExtra("po_number", model.getPo());
             startActivity(intent);
@@ -79,8 +79,15 @@ public class ListActivity extends BaseActivity {
                 }
 
                 for (POFilename model : pos.values()) {
-                    if (model.getPas1() != null && model.getPas2() != null)
-                        list.add(model);
+                    if (Globals.poMode.equals("MPO")) {
+                        // MP0: only needs Pass 1
+                        if (model.getPas1() != null)
+                            list.add(model);
+                    } else {
+                        // MP2: needs both Pass 1 and Pass 2
+                        if (model.getPas1() != null && model.getPas2() != null)
+                            list.add(model);
+                    }
                 }
 
                 if (list.size() == 0) {

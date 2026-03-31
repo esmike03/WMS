@@ -8,7 +8,7 @@ import com.zebra.waltermartmobilecollector.services.Encryptor;
 
 public class DB extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 7;
+    private static final int DB_VERSION = 10;
 
     public DB(Context context) {
         super(context, "waltermart_mobile_collector", null, DB_VERSION);
@@ -31,6 +31,9 @@ public class DB extends SQLiteOpenHelper {
                 "ip_address TEXT," +
                 "ftp_user TEXT," +
                 "ftp_password TEXT," +
+                "mms_ip_address TEXT," +
+                "mms_ftp_user TEXT," +
+                "mms_ftp_password TEXT," +
                 "masterfile_updated_at TEXT)");
 
         // buy is the factor
@@ -87,8 +90,11 @@ public class DB extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS scanned_pos ("
                 + "user_id INTEGER,"
                 + "po_id INTEGER,"
+                + "main_id INTEGER,"
                 + "qty TEXT,"
                 + "si_num TEXT,"
+                + "username TEXT,"
+                + "last_scanned_date TEXT,"
                 + "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,"
                 + "FOREIGN KEY (po_id) REFERENCES pos(id) ON DELETE CASCADE)");
 
@@ -126,13 +132,14 @@ public class DB extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO users (name,username,password,role) VALUES " +
                 "('SuperAdmin', 'superadmin', '"+password+"', 'Super Admin')");
         db.execSQL("INSERT INTO settings (masterfile_updated_at, is_wms, store,ip_address,ftp_user,ftp_password) VALUES " +
-                "('', 1, '401', '192.168.0.71','ftp-user','1234')");
+                "('', 1, '401', '192.168.0.122','ftp-user','1234')");
     }
 
     private void updates(SQLiteDatabase db){
         v3(db);
         v5(db);
         v6(db);
+
     }
 
     @Override
@@ -143,6 +150,8 @@ public class DB extends SQLiteOpenHelper {
         if (oldVersion < 5) v5(db);
         if (oldVersion < 6) v6(db);
         if (oldVersion < 7) v7(db);
+        if (oldVersion < 8) v8(db);
+        if (oldVersion < 9) v9(db);
     }
 
     private void v2(SQLiteDatabase db){
@@ -196,4 +205,24 @@ public class DB extends SQLiteOpenHelper {
         db.execSQL("ALTER TABLE scanned_sts ADD COLUMN si_num TEXT");
     }
 
+
+    private void v8(SQLiteDatabase db){
+        db.execSQL("ALTER TABLE scanned_pos ADD COLUMN main_id INTEGER");
+        db.execSQL("ALTER TABLE scanned_sts ADD COLUMN main_id INTEGER");
+    }
+
+    private void v9(SQLiteDatabase db) {
+        try {
+            db.execSQL("ALTER TABLE scanned_pos ADD COLUMN username TEXT");
+        } catch (Exception e) {}
+        try {
+            db.execSQL("ALTER TABLE scanned_pos ADD COLUMN last_scanned_date TEXT");
+        } catch (Exception e) {}
+    }
+
+    private void v10(SQLiteDatabase db){
+        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ip_address TEXT DEFAULT ''");
+        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_user TEXT DEFAULT ''");
+        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_password TEXT DEFAULT ''");
+    }
 }

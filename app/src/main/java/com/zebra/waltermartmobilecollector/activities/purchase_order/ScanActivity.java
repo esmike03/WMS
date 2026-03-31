@@ -200,22 +200,19 @@ public class ScanActivity extends ScanBaseActivity {
         int c = 0;
         for (FTPFile file : FTP.getFiles(Folders.SCANNED_PO)) {
             if (!file.isFile()) continue;
-
             String[] fn = file.getName().split("\\.");
             if (fn.length < 2 || !fn[1].equals("txt")) continue;
             String[] sp = fn[0].split("_");
             if (sp.length != 3 || !sp[0].equals(p)) continue;
 
-            try {
-                Integer.parseInt(sp[1]);
-            } catch (Exception e) {
-                continue;
-            }
+            try { Integer.parseInt(sp[1]); } catch (Exception e) { continue; }
+
             if (sp[2].equals(Globals.name)) return true;
             c++;
         }
 
-        return c < 2;
+        // MP2 = max 2 scanners, MP0 = max 1 scanner
+        return Globals.poMode.equals("MP2") ? c < 2 : c < 1;
     }
 
     @Override
