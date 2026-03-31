@@ -16,6 +16,8 @@ public final class Globals {
 
     private static String storeCode, ipAddress, ftpUser, ftpPassword, userRole;
 
+    public static String poMode = null; // "MP2" or "MPO"
+
     private static boolean isWMS = true;
 
     public static boolean userIsAdmin() {
