@@ -45,7 +45,9 @@ public class POActivity extends BaseActivity {
             findViewById(R.id.btnReport).setBackgroundColor(Color.TRANSPARENT);
         }
 
-        showModeDialog();
+        if (Globals.poMode == null) {
+            showModeDialog();
+        }
 
     }
 
