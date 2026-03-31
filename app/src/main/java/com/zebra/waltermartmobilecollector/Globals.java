@@ -18,7 +18,6 @@ public final class Globals {
 //    public static String poMode = MP2; // "MP2" or "MPO"
     public static String poMode = null; // default
 
-    public static String poMode = null; // "MP2" or "MPO"
 
     private static boolean isWMS = true;
 
