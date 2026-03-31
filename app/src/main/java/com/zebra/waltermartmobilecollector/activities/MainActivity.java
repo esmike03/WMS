@@ -105,14 +105,29 @@ public class MainActivity extends BaseActivity {
 
     public void onCheck(View v) {
         runThread(() -> {
-            FTP.checkConnection();
-
-            if (FTP.isConnected()) {
-                showSuccessInThread("FTP connection is ok.");
-                return;
+            // Test FTP1
+            try {
+                FTP.checkConnection();
+                if (FTP.isConnected()) {
+                    showSuccessInThread("FTP connection is ok.");
+                } else {
+                    showErrorInThread("Unable to connect to FTP!!!");
+                }
+            } catch (Exception e) {
+                showErrorInThread("FTP1 failed: " + e.getMessage());
+            } finally {
+                FTP.disconnect();
             }
 
-            showErrorInThread("Unable to connect to FTP!!!");
+            // Test MMS FTP2
+            try {
+                FTP.loginMMS();
+                showSuccessInThread("MMS connection is ok.");
+            } catch (Exception e) {
+                showErrorInThread("MMS connection failed: " + e.getMessage());
+            } finally {
+                FTP.disconnectMMS();
+            }
         });
     }
 

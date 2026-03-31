@@ -43,7 +43,8 @@
                 android:layout_marginEnd="8dp"
                 android:drawableTop="@mipmap/ic_cfc"
                 android:onClick="onCheck"
-                android:text="check ftp Connection"
+                android:text="Test FTP &amp; MMS Connection"
+
                 app:layout_constraintEnd_toStartOf="@+id/space"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
