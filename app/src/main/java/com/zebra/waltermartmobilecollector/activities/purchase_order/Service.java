@@ -169,7 +169,7 @@ public final class Service {
             }
 
             Cursor c = Globals.db.rawQuery(
-                    "select p.po, p.sku, s.qty, p.factor, s.si_num from scanned_pos s " +
+                    "select p.po, p.sku, s.qty, p.factor, s.si_num, s.username, s.last_scanned_date from scanned_pos s " +
                             "inner join pos p on p.id=s.po_id " +
                             " where s.user_id=" + Globals.userId + " order by p.po",
                     null
@@ -196,11 +196,15 @@ public final class Service {
                 int multiplier = Helper.convertToIntAndRemoveDot(c.getString(3));
                 int totalQty = qty * multiplier;
                 String siNum = c.getString(4) != null ? c.getString(4) : "";
+                String username = c.getString(5) != null ? c.getString(5) : "";
+                String lastScannedDate = c.getString(6) != null ? c.getString(6) : "";
                 stringBuffer
                         .append(c.getString(0)).append(",")
                         .append(c.getString(1)).append(",")
                         .append(totalQty).append(",")
-                        .append(siNum).append("\n");
+                        .append(siNum).append(",")
+                        .append(username).append(",")
+                        .append(lastScannedDate).append("\n");
             }
 
             if (stringBuffer.length() == 0) return;
@@ -327,9 +331,18 @@ public final class Service {
     }
 
     public static void updateScanned(String id, String mainID, int qty, String siNum) {
+        String date = "";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            date = java.time.format.DateTimeFormatter
+                    .ofPattern("yy/MM/dd")
+                    .format(java.time.LocalDateTime.now());
+        }
+
         ContentValues values = new ContentValues();
         values.put("qty", qty);
         values.put("si_num", siNum);
+        values.put("username", Globals.name);
+        values.put("last_scanned_date", date);
 
         int row = Globals.db.update("scanned_pos", values, "po_id=? and user_id=" + Globals.userId, new String[]{id});
 
