@@ -8,7 +8,7 @@ import com.zebra.waltermartmobilecollector.services.Encryptor;
 
 public class DB extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 8;
+    private static final int DB_VERSION = 9;
 
     public DB(Context context) {
         super(context, "waltermart_mobile_collector", null, DB_VERSION);
@@ -90,6 +90,8 @@ public class DB extends SQLiteOpenHelper {
                 + "main_id INTEGER,"
                 + "qty TEXT,"
                 + "si_num TEXT,"
+                + "username TEXT,"
+                + "last_scanned_date TEXT,"
                 + "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,"
                 + "FOREIGN KEY (po_id) REFERENCES pos(id) ON DELETE CASCADE)");
 
@@ -146,6 +148,7 @@ public class DB extends SQLiteOpenHelper {
         if (oldVersion < 6) v6(db);
         if (oldVersion < 7) v7(db);
         if (oldVersion < 8) v8(db);
+        if (oldVersion < 9) v9(db);
     }
 
     private void v2(SQLiteDatabase db){
@@ -203,6 +206,15 @@ public class DB extends SQLiteOpenHelper {
     private void v8(SQLiteDatabase db){
         db.execSQL("ALTER TABLE scanned_pos ADD COLUMN main_id INTEGER");
         db.execSQL("ALTER TABLE scanned_sts ADD COLUMN main_id INTEGER");
+    }
+
+    private void v9(SQLiteDatabase db) {
+        try {
+            db.execSQL("ALTER TABLE scanned_pos ADD COLUMN username TEXT");
+        } catch (Exception e) {}
+        try {
+            db.execSQL("ALTER TABLE scanned_pos ADD COLUMN last_scanned_date TEXT");
+        } catch (Exception e) {}
     }
 
 }
