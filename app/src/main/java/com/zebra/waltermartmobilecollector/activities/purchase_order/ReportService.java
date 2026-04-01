@@ -68,7 +68,6 @@ public final class ReportService {
         String header = new StringBuffer()
                 .append("Rundate : ").append(date).append("\n")
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
-
                 .append("TOTAL SKU with COUNT : ").append(totalScannedSku).append("\n")
                 .append("EXPECTED TOTAL BOXES : ").append(totalBoxExpected).append("\n")
                 .append("TOTAL BOX : ").append(totalScannedBox).append("\n")
@@ -99,14 +98,16 @@ public final class ReportService {
         StringBuffer skuBodyBuffer = new StringBuffer();
         StringBuffer tempBuffer = new StringBuffer();
         StringBuffer receiptBuilder = new StringBuffer();
+        StringBuffer finalTxtBuffer = new StringBuffer(); // ✅ ADDED
 
         String date = "";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
-            date = DateTimeFormatter.ofPattern("MM/dd/yyyy").format(LocalDateTime.now());
+            date = DateTimeFormatter.ofPattern("yyMMdd").format(LocalDateTime.now());
 
         int totalScannedBox = 0, totalScannedPcs = 0, totalPas1 = 0, totalPas2 = 0, totalScannedSku = 0,
                 totalDiff = 0, totalPas1Box = 0, totalPas2Box = 0, skuCounter = 1,
                 totalPas1Diff = 0, totalPas2Diff = 0, totalBoxExpected = 0, totalPcsExpected = 0;
+
         for (int i = 0; i < allData.size(); i++) {
             Model model = allData.get(i);
 
@@ -114,8 +115,7 @@ public final class ReportService {
             int pas1Box = model.getPas1() / model.getFactor();
             int pas2Box = model.getPas2() / model.getFactor();
             int diff = model.getPas1() - model.getPas2();
-            if (diff < 0)
-                diff = -diff;
+            if (diff < 0) diff = -diff;
             totalBoxExpected += expBox;
             totalPcsExpected += model.getPcs();
             totalDiff += diff;
@@ -124,10 +124,21 @@ public final class ReportService {
             totalPas1Diff += (expBox - pas1Box);
             totalPas2Diff += (expBox - pas2Box);
 
-            if (model.getPas1() == model.getPas2()) {
+            if (model.getPas1() == model.getPas2() && model.getPas1() != 0) {
                 totalScannedBox += (model.getPas1() / model.getFactor());
                 totalScannedPcs += model.getPas1();
-            } else amModel.unmatch();
+                // ✅ populate finalTxtBuffer with SI, username, scannedDate
+                finalTxtBuffer
+                        .append(poNo).append(",")
+                        .append(model.getSku()).append(",")
+                        .append(model.getPas1()).append(",")
+                        .append(model.getSiNum()).append(",")
+                        .append(model.getUsername()).append(",")
+                        .append(model.getScannedDate()).append("\n");
+            } else {
+                amModel.unmatch();
+            }
+
             totalPas1 += model.getPas1();
             totalPas2 += model.getPas2();
 
@@ -146,11 +157,7 @@ public final class ReportService {
 
             tempBuffer
                     .append(",")
-                    .append(
-                            model.getPas1() == model.getPas2()
-                                    ? model.getPas1()
-                                    : 0
-                    ).append(",")
+                    .append(model.getPas1() == model.getPas2() ? model.getPas1() : 0).append(",")
                     .append(model.getPcs()).append(",")
                     .append(diff).append(",")
                     .append(expBox).append(",")
@@ -221,6 +228,7 @@ public final class ReportService {
 
         amModel.setReport(header + reportBodyBuffer);
         amModel.setSkuReport(header + skuBodyBuffer);
+        amModel.setFinalTxt(finalTxtBuffer.toString()); // ✅ ADDED — was missing, caused the NPE crash
         amModel.setTotalBoxExpected(totalBoxExpected);
         amModel.setTotalPcsExpected(totalPcsExpected);
 
@@ -236,6 +244,7 @@ public final class ReportService {
         int totalScannedBox = 0, totalScannedPcs = 0, totalPas1 = 0, totalPas3 = 0, totalScannedSku = 0,
                 totalPas1Box = 0, skuCounter = 1,
                 totalPas1Diff = 0, totalBoxExpected = 0, totalPcsExpected = 0;
+
         for (int i = 0; i < allData.size(); i++) {
             Model model = allData.get(i);
             int pc = model.getPas3() > 0 ? model.getPas3() : model.getPas1();
@@ -324,6 +333,7 @@ public final class ReportService {
         int totalScannedBox = 0, totalScannedPcs = 0, totalPas1 = 0, totalPas2 = 0, totalPas3 = 0, totalScannedSku = 0,
                 totalDiff = 0, totalPas1Box = 0, totalPas2Box = 0, skuCounter = 1,
                 totalPas1Diff = 0, totalPas2Diff = 0, totalBoxExpected = 0, totalPcsExpected = 0;
+
         for (int i = 0; i < allData.size(); i++) {
             Model model = allData.get(i);
             int pc = model.getPas3() > 0 ? model.getPas3() : model.getPas1();
@@ -332,8 +342,7 @@ public final class ReportService {
             int pas1Box = model.getPas1() / model.getFactor();
             int pas2Box = model.getPas2() / model.getFactor();
             int diff = model.getPas1() - model.getPas2();
-            if (diff < 0)
-                diff = -diff;
+            if (diff < 0) diff = -diff;
             totalDiff += diff;
             totalPas1Box += pas1Box;
             totalPas2Box += pas2Box;
@@ -343,10 +352,14 @@ public final class ReportService {
             totalPcsExpected += model.getPcs();
 
             if (pc != 0) {
+                // ✅ include SI, username, scannedDate
                 finalTxtBuffer
                         .append(poNo).append(",")
                         .append(model.getSku()).append(",")
-                        .append(pc).append("\n");
+                        .append(pc).append(",")
+                        .append(model.getSiNum()).append(",")
+                        .append(model.getUsername()).append(",")
+                        .append(model.getScannedDate()).append("\n");
                 receiptBuilder
                         .append(model.getSku()).append(",'")
                         .append(model.getBarcode()).append(",")
@@ -446,5 +459,4 @@ public final class ReportService {
 
         return amModel;
     }
-
 }

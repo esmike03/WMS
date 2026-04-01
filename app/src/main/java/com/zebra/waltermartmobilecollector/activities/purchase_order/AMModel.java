@@ -2,7 +2,7 @@ package com.zebra.waltermartmobilecollector.activities.purchase_order;
 
 public class AMModel {
 
-    private String report, finalTxt, skuReport,receipt;
+    private String report, finalTxt, skuReport, receipt;
     private int totalBoxExpected = 0, totalPcsExpected = 0;
     private boolean matched = true;
 
@@ -15,7 +15,7 @@ public class AMModel {
     }
 
     public String getReport() {
-        return report;
+        return report != null ? report : ""; // ✅ null-safe
     }
 
     public void setReport(String report) {
@@ -23,7 +23,7 @@ public class AMModel {
     }
 
     public String getFinalTxt() {
-        return finalTxt;
+        return finalTxt != null ? finalTxt : ""; // ✅ null-safe
     }
 
     public void setFinalTxt(String finalTxt) {
@@ -31,7 +31,7 @@ public class AMModel {
     }
 
     public String getSkuReport() {
-        return skuReport;
+        return skuReport != null ? skuReport : ""; // ✅ null-safe
     }
 
     public void setSkuReport(String skuReport) {
@@ -55,7 +55,7 @@ public class AMModel {
     }
 
     public String getReceipt() {
-        return receipt;
+        return receipt != null ? receipt : ""; // ✅ null-safe
     }
 
     public void setReceipt(String receipt) {

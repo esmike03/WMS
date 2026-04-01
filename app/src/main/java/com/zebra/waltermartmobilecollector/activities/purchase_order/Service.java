@@ -62,15 +62,14 @@ public final class Service {
 
     public static ArrayList<Model> getPerPOWithDescWithPas3(String po) {
         Cursor c = Globals.db.rawQuery(
-                "SELECT p.id,p.sku,m.barcode,m.description,p.qty,p.factor,s.qty from pos p " +
+                "SELECT p.id,p.sku,m.barcode,m.description,p.qty,p.factor,s.qty,s.si_num,s.username,s.last_scanned_date from pos p " +
                         "inner join main m on m.sku=p.sku " +
                         "left join scanned_pos s on s.po_id=p.id and s.user_id=" + Globals.userId +
-                        " where p.po=? group by p.sku"
-                , new String[]{po}
+                        " where p.po=? group by p.sku", new String[]{po}
         );
         ArrayList<Model> data = new ArrayList<>();
         while (c.moveToNext()) {
-            data.add(new Model(
+            Model model = new Model(
                     c.getString(0),
                     c.getString(1),
                     c.getString(2),
@@ -78,7 +77,11 @@ public final class Service {
                     c.getString(4),
                     c.getString(5),
                     c.getString(6)
-            ));
+            );
+            model.setSiNum(c.getString(7));       // ✅ MISSING in your version
+            model.setUsername(c.getString(8));    // ✅ MISSING in your version
+            model.setScannedDate(c.getString(9)); // ✅ MISSING in your version
+            data.add(model);
         }
         c.close();
         return data;
@@ -334,7 +337,7 @@ public final class Service {
         String date = "";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             date = java.time.format.DateTimeFormatter
-                    .ofPattern("yy/MM/dd")
+                    .ofPattern("yyMMdd")     // no slashes
                     .format(java.time.LocalDateTime.now());
         }
 

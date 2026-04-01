@@ -6,6 +6,8 @@ public class Model {
 
     private String id, sku, barcode, desc;
     private int pas1 = 0, pas2 = 0, pas3 = 0, factor = 0, pcs = 0;
+    // ✅ NEW FIELDS
+    private String siNum = "", username = "", scannedDate = "";
 
     public Model(String id, String sku, String barcode, String desc, String pcs, String factor) {
         this.id = id;
@@ -44,7 +46,7 @@ public class Model {
         this.pas3 = this.pas3 * this.factor;
     }
 
-    public Model (String sku, String barcode, String desc, String p1, String p2, String p3, boolean none){
+    public Model(String sku, String barcode, String desc, String p1, String p2, String p3, boolean none) {
         this.sku = sku;
         this.barcode = barcode;
         this.desc = desc;
@@ -53,7 +55,7 @@ public class Model {
         setPas3(p3);
     }
 
-    public void setPcsAndFactor(String p, String f){
+    public void setPcsAndFactor(String p, String f) {
         setPcs(p);
         setFactor(f);
     }
@@ -137,5 +139,30 @@ public class Model {
 
     public int getPcs() {
         return pcs;
+    }
+
+    // ✅ NEW GETTERS & SETTERS
+    public String getSiNum() {
+        return siNum;
+    }
+
+    public void setSiNum(String siNum) {
+        this.siNum = siNum != null ? siNum : "";
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username != null ? username : "";
+    }
+
+    public String getScannedDate() {
+        return scannedDate;
+    }
+
+    public void setScannedDate(String scannedDate) {
+        this.scannedDate = scannedDate != null ? scannedDate : "";
     }
 }
