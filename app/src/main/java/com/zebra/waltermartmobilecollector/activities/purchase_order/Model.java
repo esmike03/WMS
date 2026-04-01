@@ -90,4 +90,8 @@ public class Model {
     public void setUpdatedQty(String updatedQty) {
         this.updatedQty = updatedQty;
     }
+
+
 }
+
+

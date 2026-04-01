@@ -55,6 +55,7 @@ public class MainActivity extends BaseActivity {
         setButton(findViewById(R.id.btnStockCount));
 
         findViewById(R.id.btnPO).setOnClickListener(v -> {
+            Globals.poMode = null;
             startActivity(new Intent(this, POActivity.class));
             finish();
         });

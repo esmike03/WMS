@@ -138,4 +138,18 @@ public class Model {
     public int getPcs() {
         return pcs;
     }
+
+    private String pas1Username, pas2Username, pas1Date, pas2Date;
+
+    public String getPas1Username() { return pas1Username; }
+    public void setPas1Username(String pas1Username) { this.pas1Username = pas1Username; }
+
+    public String getPas2Username() { return pas2Username; }
+    public void setPas2Username(String pas2Username) { this.pas2Username = pas2Username; }
+
+    public String getPas1Date() { return pas1Date; }
+    public void setPas1Date(String pas1Date) { this.pas1Date = pas1Date; }
+
+    public String getPas2Date() { return pas2Date; }
+    public void setPas2Date(String pas2Date) { this.pas2Date = pas2Date; }
 }

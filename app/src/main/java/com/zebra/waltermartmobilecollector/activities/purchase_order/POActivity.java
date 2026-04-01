@@ -36,6 +36,7 @@ public class POActivity extends BaseActivity {
         findViewById(R.id.btnUpdate).setBackgroundColor(Color.TRANSPARENT);
         findViewById(R.id.btnSend).setBackgroundColor(Color.TRANSPARENT);
 
+
         if (Globals.userIsNormalUser()) {
             findViewById(R.id.btnAM).setVisibility(View.GONE);
             findViewById(R.id.btnReport).setVisibility(View.GONE);
