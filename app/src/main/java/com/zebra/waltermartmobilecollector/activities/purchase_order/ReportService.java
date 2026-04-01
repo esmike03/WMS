@@ -102,7 +102,7 @@ public final class ReportService {
 
         String date = "";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
-            date = DateTimeFormatter.ofPattern("yyMMdd").format(LocalDateTime.now());
+            date = DateTimeFormatter.ofPattern("yy/MM/dd").format(LocalDateTime.now());
 
         int totalScannedBox = 0, totalScannedPcs = 0, totalPas1 = 0, totalPas2 = 0, totalScannedSku = 0,
                 totalDiff = 0, totalPas1Box = 0, totalPas2Box = 0, skuCounter = 1,
@@ -181,9 +181,9 @@ public final class ReportService {
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
                 .append("SI # : ").append(siNum).append("\n")
                 .append("P1 User : ").append(allData.size() > 0 && allData.get(0).getPas1Username() != null ? allData.get(0).getPas1Username() : "").append("\n")
-                .append("P1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
+                .append("S1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
                 .append("P2 User : ").append(allData.size() > 0 && allData.get(0).getPas2Username() != null ? allData.get(0).getPas2Username() : "").append("\n")
-                .append("P2 Date : ").append(allData.size() > 0 && allData.get(0).getPas2Date() != null ? allData.get(0).getPas2Date() : "").append("\n")
+                .append("S2 Date : ").append(allData.size() > 0 && allData.get(0).getPas2Date() != null ? allData.get(0).getPas2Date() : "").append("\n")
                 .append("TOTAL SKU with COUNT : ").append(totalScannedSku).append("\n")
                 .append("EXPECTED TOTAL BOXES : ").append(totalBoxExpected).append("\n")
                 .append("TOTAL BOX : ").append(totalScannedBox).append("\n")
@@ -434,9 +434,9 @@ public final class ReportService {
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
                 .append("SI # : ").append(siNum).append("\n")
                 .append("P1 User : ").append(allData.size() > 0 && allData.get(0).getPas1Username() != null ? allData.get(0).getPas1Username() : "").append("\n")
-                .append("P1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
+                .append("S1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
                 .append("P2 User : ").append(allData.size() > 0 && allData.get(0).getPas2Username() != null ? allData.get(0).getPas2Username() : "").append("\n")
-                .append("P2 Date : ").append(allData.size() > 0 && allData.get(0).getPas2Date() != null ? allData.get(0).getPas2Date() : "").append("\n")
+                .append("S2 Date : ").append(allData.size() > 0 && allData.get(0).getPas2Date() != null ? allData.get(0).getPas2Date() : "").append("\n")
                 .append("TOTAL SKU with COUNT : ").append(totalScannedSku).append("\n")
                 .append("EXPECTED TOTAL BOXES : ").append(totalBoxExpected).append("\n")
                 .append("TOTAL BOX : ").append(totalScannedBox).append("\n")
