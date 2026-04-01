@@ -127,20 +127,15 @@ public final class ReportService {
             totalPas2Diff += (expBox - pas2Box);
 
             // ✅ CORRECT
-            if (model.getPas1() == model.getPas2()) {
-                totalScannedBox += (model.getPas1() / model.getFactor());
-                totalScannedPcs += model.getPas1();
-                if (model.getPas1() != 0) {
-                    finalTxtBuffer
-                            .append(poNo).append(",")
-                            .append(model.getSku()).append(",")
-                            .append(model.getPas1()).append(",")
-                            .append(model.getSiNum()).append(",")
-                            .append(model.getUsername()).append(",")
-                            .append(model.getScannedDate()).append("\n");
-                }
-            } else {
-                amModel.unmatch();
+            if (model.getPas1() != 0) {
+                finalTxtBuffer
+                        .append(poNo).append(",")
+                        .append(model.getSku()).append(",")
+                        .append(model.getPas1()).append(",")
+                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append(",")
+                        .append(model.getPas1Date() != null ? model.getPas1Date() : "").append(",")
+                        .append(model.getPas2Username() != null ? model.getPas2Username() : "").append(",")
+                        .append(model.getPas2Date() != null ? model.getPas2Date() : "").append("\n");
             }
 
             totalPas1 += model.getPas1();
