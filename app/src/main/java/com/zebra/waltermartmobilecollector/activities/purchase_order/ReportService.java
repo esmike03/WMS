@@ -65,11 +65,21 @@ public final class ReportService {
             tempBuffer.setLength(0);
         }
 
+        // ✅ Find first non-null username and date
+        String p1User = "";
+        String p1Date = "";
+        for (Model m : allData) {
+            if (m.getPas1Username() != null) { p1User = m.getPas1Username(); break; }
+        }
+        for (Model m : allData) {
+            if (m.getPas1Date() != null) { p1Date = m.getPas1Date(); break; }
+        }
+
         String header = new StringBuffer()
                 .append("Rundate : ").append(date).append("\n")
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
-                .append("P1 User : ").append(allData.size() > 0 && allData.get(0).getPas1Username() != null ? allData.get(0).getPas1Username() : "").append("\n")
-                .append("P1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
+                .append("P1 User : ").append(p1User).append("\n")
+                .append("P1 Date : ").append(p1Date).append("\n")
                 .append("TOTAL SKU with COUNT : ").append(totalScannedSku).append("\n")
                 .append("EXPECTED TOTAL BOXES : ").append(totalBoxExpected).append("\n")
                 .append("TOTAL BOX : ").append(totalScannedBox).append("\n")
@@ -265,7 +275,9 @@ public final class ReportService {
                 finalTxtBuffer
                         .append(poNo).append(",")
                         .append(model.getSku()).append(",")
-                        .append(pc).append("\n");
+                        .append(pc).append(",")
+                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append(",")  // ← ADD
+                        .append(model.getPas1Date() != null ? model.getPas1Date() : "").append("\n");        // ← ADD
 
             totalScannedBox += (pc / model.getFactor());
             totalScannedPcs += pc;
