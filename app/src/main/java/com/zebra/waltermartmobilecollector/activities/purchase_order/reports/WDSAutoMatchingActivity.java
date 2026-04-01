@@ -191,7 +191,7 @@ public class WDSAutoMatchingActivity extends BaseActivity {
     }
 
     private void saveReport() throws Exception {
-        AMModel amModel = ReportService.getWDS(allData, poNo);
+        AMModel amModel = ReportService.getWDS(allData, poNo, "");
 
         FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt());
         FTP.upload(reportFolder + poNo + "_Report_Matched.csv", amModel.getReport());

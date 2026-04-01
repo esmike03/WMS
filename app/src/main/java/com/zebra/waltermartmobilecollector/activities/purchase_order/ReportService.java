@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public final class ReportService {
 
-    public static AMModel getWDSWithoutPas3(ArrayList<Model> allData, String poNo) {
+    public static AMModel getWDSWithoutPas3(ArrayList<Model> allData, String poNo, String siNum) {
         AMModel amModel = new AMModel();
         StringBuffer reportBodyBuffer = new StringBuffer();
         StringBuffer skuBodyBuffer = new StringBuffer();
@@ -68,6 +68,8 @@ public final class ReportService {
         String header = new StringBuffer()
                 .append("Rundate : ").append(date).append("\n")
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
+                .append("P1 User : ").append(allData.size() > 0 && allData.get(0).getPas1Username() != null ? allData.get(0).getPas1Username() : "").append("\n")
+                .append("P1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
                 .append("TOTAL SKU with COUNT : ").append(totalScannedSku).append("\n")
                 .append("EXPECTED TOTAL BOXES : ").append(totalBoxExpected).append("\n")
                 .append("TOTAL BOX : ").append(totalScannedBox).append("\n")
@@ -236,7 +238,9 @@ public final class ReportService {
         return amModel;
     }
 
-    public static AMModel getWDS(ArrayList<Model> allData, String poNo) {
+
+
+    public static AMModel getWDS(ArrayList<Model> allData, String poNo, String siNum) {
         AMModel amModel = new AMModel();
         StringBuffer reportBodyBuffer = new StringBuffer();
         StringBuffer skuBodyBuffer = new StringBuffer();
@@ -301,6 +305,8 @@ public final class ReportService {
         String header = new StringBuffer()
                 .append("Rundate : ").append(date).append("\n")
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
+                .append("P1 User : ").append(allData.size() > 0 && allData.get(0).getPas1Username() != null ? allData.get(0).getPas1Username() : "").append("\n")
+                .append("P1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
                 .append("TOTAL SKU with COUNT : ").append(totalScannedSku).append("\n")
                 .append("EXPECTED TOTAL BOXES : ").append(totalBoxExpected).append("\n")
                 .append("TOTAL BOX : ").append(totalScannedBox).append("\n")

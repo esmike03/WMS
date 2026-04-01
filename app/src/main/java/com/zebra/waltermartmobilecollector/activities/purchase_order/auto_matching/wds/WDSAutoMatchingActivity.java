@@ -86,8 +86,10 @@ public class WDSAutoMatchingActivity extends BaseActivity {
         });
     }
 
+
+
     private void saveAutoMatchingReport() throws Exception {
-        AMModel amModel = ReportService.getWDSWithoutPas3(allData, poNo);
+        AMModel amModel = ReportService.getWDSWithoutPas3(allData, poNo, "");
         totalBoxExpected = amModel.getTotalBoxExpected();
         totalPcsExpected = amModel.getTotalPcsExpected();
 
@@ -174,9 +176,11 @@ public class WDSAutoMatchingActivity extends BaseActivity {
                 pas1Filename,
                 (statement, rows) -> {
                     Model model = Service.getPas3Model(rows.get(1), allData);
-                    if (model != null)
+                    if (model != null) {
                         model.setPas1(rows.get(2));
-
+                        if (rows.size() > 4) model.setPas1Username(rows.get(4));
+                        if (rows.size() > 5) model.setPas1Date(rows.get(5));
+                    }
                     return true;
                 }
         );
@@ -198,7 +202,7 @@ public class WDSAutoMatchingActivity extends BaseActivity {
     }
 
     private void saveReport() throws Exception {
-        AMModel amModel = ReportService.getWDS(allData, poNo);
+        AMModel amModel = ReportService.getWDS(allData, poNo, "");
 
         FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt());
         FTP.upload(reportFolder + poNo + "_Report_Matched.csv", amModel.getReport());
