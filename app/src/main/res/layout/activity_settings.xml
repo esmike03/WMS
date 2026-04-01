@@ -22,14 +22,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- FTP SETTINGS SECTION -->
+        <TextView
+            android:id="@+id/txtFTPLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="FTP SETTINGS"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="@+id/edtTxtStore"
-            app:layout_constraintTop_toBottomOf="@+id/textView2">
+            app:layout_constraintTop_toBottomOf="@+id/txtFTPLabel">
 
             <RadioButton
                 android:id="@+id/rbWMS"
@@ -101,16 +114,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edtTxtFTPUser" />
 
-        <Button
-            android:id="@+id/btnUpdate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="update settings"
-            app:layout_constraintEnd_toEndOf="@+id/edtTxtIP"
-            app:layout_constraintStart_toStartOf="@+id/edtTxtIP"
-            app:layout_constraintTop_toBottomOf="@+id/edtTxtFTPPassword" />
-
         <!-- MMS SETTINGS SECTION -->
         <TextView
             android:id="@+id/txtMMSLabel"
@@ -122,7 +125,7 @@
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnUpdate" />
+            app:layout_constraintTop_toBottomOf="@+id/edtTxtFTPPassword" />
 
         <EditText
             android:id="@+id/edtTxtMMSIP"
@@ -166,26 +169,44 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edtTxtMMSUser" />
 
+        <!-- BUTTONS -->
         <Button
-            android:id="@+id/btnUpdateMMS"
+            android:id="@+id/btnSaveAll"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="update MMS settings"
-            app:layout_constraintEnd_toEndOf="@+id/edtTxtMMSIP"
-            app:layout_constraintStart_toStartOf="@+id/edtTxtMMSIP"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Save All Settings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edtTxtMMSPassword" />
+
+        <Button
+            android:id="@+id/btnCheckConnection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="Test FTP &amp; MMS Connection"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSaveAll" />
 
         <Button
             android:id="@+id/btnHome"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:onClick="onClickHome"
-            android:text="back to main menu"
-            app:layout_constraintEnd_toEndOf="@+id/edtTxtMMSIP"
-            app:layout_constraintStart_toStartOf="@+id/edtTxtMMSIP"
-            app:layout_constraintTop_toBottomOf="@+id/btnUpdateMMS" />
+            android:text="Back to Main Menu"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnCheckConnection" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

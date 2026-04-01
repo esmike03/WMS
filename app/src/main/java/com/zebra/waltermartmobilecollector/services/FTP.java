@@ -24,7 +24,6 @@ import java.util.Arrays;
 
 public final class FTP {
     private final static FTPClient ftp = new FTPClient();
-
     private final static FTPClient mmsFtp = new FTPClient();
 
     public static FTPClient getFtp() {
@@ -34,8 +33,12 @@ public final class FTP {
     public static FTPClient getMmsFtp() {
         return mmsFtp;
     }
+
     public static void login() throws Exception {
         try {
+            // ✅ Disconnect first to avoid duplicate sessions
+            disconnect();
+
             ftp.connect(Globals.getIpAddress());
             ftp.login(Globals.getFtpUser(), Globals.getFtpPassword());
             ftp.enterLocalPassiveMode();
@@ -54,8 +57,13 @@ public final class FTP {
 
     public static void checkConnection() throws Exception {
         try {
+            // ✅ Disconnect first to avoid duplicate sessions
+            disconnect();
+
             ftp.connect(Globals.getIpAddress());
             ftp.login(Globals.getFtpUser(), Globals.getFtpPassword());
+            ftp.enterLocalPassiveMode();
+            ftp.setFileType(org.apache.commons.net.ftp.FTP.ASCII_FILE_TYPE);
 
             if (!isConnected())
                 throw new Exception("Failed to connect to FTP!!!");
@@ -67,9 +75,61 @@ public final class FTP {
     public static void disconnect() {
         try {
             if (!ftp.isConnected()) return;
-
             ftp.logout();
             ftp.disconnect();
+        } catch (Exception e) {
+        }
+    }
+
+    public static void loginMMS() throws Exception {
+        try {
+            // ✅ Disconnect first to avoid duplicate sessions
+            disconnectMMS();
+
+            mmsFtp.connect(Globals.getMmsIpAddress());
+            mmsFtp.login(Globals.getMmsFtpUser(), Globals.getMmsFtpPassword());
+            mmsFtp.enterLocalPassiveMode();
+            mmsFtp.setFileType(org.apache.commons.net.ftp.FTP.ASCII_FILE_TYPE);
+
+            if (!mmsFtp.isConnected())
+                throw new Exception("Failed to connect to MMS FTP!!!");
+        } catch (Exception e) {
+            throw new Exception("No connection through MMS FTP in " + Globals.getMmsIpAddress() + "!!!");
+        }
+    }
+
+    public static void disconnectMMS() {
+        try {
+            if (!mmsFtp.isConnected()) return;
+            mmsFtp.logout();
+            mmsFtp.disconnect();
+        } catch (Exception e) {
+        }
+    }
+
+    public static void uploadToMMS(String filepath, String content) throws Exception {
+        File tempFile = File.createTempFile("ftpTemp", null);
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+        writer.write(content);
+        writer.close();
+
+        FileInputStream is = null;
+        try {
+            is = new FileInputStream(tempFile);
+            mmsFtp.storeFile(filepath, is);
+        } finally {
+            try {
+                tempFile.delete();
+                is.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public static void makeMmsDirectory(String path) {
+        try {
+            mmsFtp.makeDirectory(path);
         } catch (Exception e) {
         }
     }
@@ -276,56 +336,6 @@ public final class FTP {
                 throw new Exception("Failed to upload the file!!!");
         } finally {
             tempFile.delete();
-        }
-    }
-
-    public static void loginMMS() throws Exception {
-        try {
-            mmsFtp.connect(Globals.getMmsIpAddress());
-            mmsFtp.login(Globals.getMmsFtpUser(), Globals.getMmsFtpPassword());
-            mmsFtp.enterLocalPassiveMode();
-            mmsFtp.setFileType(org.apache.commons.net.ftp.FTP.ASCII_FILE_TYPE);
-
-            if (!mmsFtp.isConnected())
-                throw new Exception("Failed to connect to MMS FTP!!!");
-        } catch (Exception e) {
-            throw new Exception("No connection through MMS FTP in " + Globals.getMmsIpAddress() + "!!!");
-        }
-    }
-
-    public static void disconnectMMS() {
-        try {
-            if (!mmsFtp.isConnected()) return;
-            mmsFtp.logout();
-            mmsFtp.disconnect();
-        } catch (Exception e) {
-        }
-    }
-
-    public static void uploadToMMS(String filepath, String content) throws Exception {
-        File tempFile = File.createTempFile("ftpTemp", null);
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-        writer.write(content);
-        writer.close();
-
-        FileInputStream is = null;
-        try {
-            is = new FileInputStream(tempFile);
-            mmsFtp.storeFile(filepath, is);
-        } finally {
-            try {
-                tempFile.delete();
-                is.close();
-            } catch (Exception e) {
-            }
-        }
-    }
-
-    public static void makeMmsDirectory(String path) {
-        try {
-            mmsFtp.makeDirectory(path);
-        } catch (Exception e) {
         }
     }
 }
