@@ -126,10 +126,12 @@ public class AutoMatchingActivity extends BaseActivity {
         FTP.getFtp().makeDirectory(reportFolder);
         moveFiles();
         if (isMatched) {
-            FTP.copy(
-                    reportFolder + pas1Filename,
-                    reportFolder + poNo + "_Final.txt"
-            );
+//            FTP.copy(
+//                    reportFolder + pas1Filename,
+//                    reportFolder + poNo + "_Final.txt"
+//            );
+
+            FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt()); // ← overwrites with get()
             FTP.upload(reportFolder + poNo + "_Receipt.csv", amModel.getReceipt());
             FTP.upload(reportFolder + poNo + "_Report_Matched.csv", amModel.getReport());
         } else {
@@ -219,9 +221,12 @@ public class AutoMatchingActivity extends BaseActivity {
                     }
 
                     Model model = Service.getPas3Model(rows.get(1), allData);
-                    if (model != null)
+                    if (model != null) {
                         model.setPas1(rows.get(2));
-
+                        if (rows.size() > 3) model.setSiNum(rows.get(3));
+                        if (rows.size() > 4) model.setPas1Username(rows.get(4));
+                        if (rows.size() > 5) model.setPas1Date(rows.get(5));
+                    }
                     return true;
                 }
         );
@@ -232,10 +237,13 @@ public class AutoMatchingActivity extends BaseActivity {
                 Folders.SCANNED_PO,
                 pas2Filename,
                 (statement, rows) -> {
+                    android.util.Log.d("PAS2", rows.toString()); // ← add this
                     Model model = Service.getPas3Model(rows.get(1), allData);
-                    if (model != null)
+                    if (model != null) {
                         model.setPas2(rows.get(2));
-
+                        if (rows.size() > 4) model.setPas2Username(rows.get(4));
+                        if (rows.size() > 5) model.setPas2Date(rows.get(5));
+                    }
                     return true;
                 }
         );

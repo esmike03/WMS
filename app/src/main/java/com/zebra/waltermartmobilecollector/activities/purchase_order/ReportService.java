@@ -125,20 +125,15 @@ public final class ReportService {
             totalPas2Diff += (expBox - pas2Box);
 
             // ✅ CORRECT
-            if (model.getPas1() == model.getPas2()) {
-                totalScannedBox += (model.getPas1() / model.getFactor());
-                totalScannedPcs += model.getPas1();
-                if (model.getPas1() != 0) {
-                    finalTxtBuffer
-                            .append(poNo).append(",")
-                            .append(model.getSku()).append(",")
-                            .append(model.getPas1()).append(",")
-                            .append(model.getSiNum()).append(",")
-                            .append(model.getUsername()).append(",")
-                            .append(model.getScannedDate()).append("\n");
-                }
-            } else {
-                amModel.unmatch();
+            if (model.getPas1() != 0) {
+                finalTxtBuffer
+                        .append(poNo).append(",")
+                        .append(model.getSku()).append(",")
+                        .append(model.getPas1()).append(",")
+                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append(",")
+                        .append(model.getPas1Date() != null ? model.getPas1Date() : "").append(",")
+                        .append(model.getPas2Username() != null ? model.getPas2Username() : "").append(",")
+                        .append(model.getPas2Date() != null ? model.getPas2Date() : "").append("\n");
             }
 
             totalPas1 += model.getPas1();
@@ -166,7 +161,7 @@ public final class ReportService {
                     .append(pas1Box).append(",")
                     .append(expBox - pas1Box).append(",")
                     .append(pas2Box).append(",")
-                    .append(expBox - pas2Box).append("\n");
+                    .append(expBox - pas2Box).append(",");
 
             reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
             if (model.getPas1() != 0 || model.getPas2() != 0) {
@@ -185,6 +180,10 @@ public final class ReportService {
                 .append("Rundate : ").append(date).append("\n")
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
                 .append("SI # : ").append(siNum).append("\n")
+                .append("P1 User : ").append(allData.size() > 0 && allData.get(0).getPas1Username() != null ? allData.get(0).getPas1Username() : "").append("\n")
+                .append("P1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
+                .append("P2 User : ").append(allData.size() > 0 && allData.get(0).getPas2Username() != null ? allData.get(0).getPas2Username() : "").append("\n")
+                .append("P2 Date : ").append(allData.size() > 0 && allData.get(0).getPas2Date() != null ? allData.get(0).getPas2Date() : "").append("\n")
                 .append("TOTAL SKU with COUNT : ").append(totalScannedSku).append("\n")
                 .append("EXPECTED TOTAL BOXES : ").append(totalBoxExpected).append("\n")
                 .append("TOTAL BOX : ").append(totalScannedBox).append("\n")
@@ -354,14 +353,14 @@ public final class ReportService {
             totalPcsExpected += model.getPcs();
 
             if (pc != 0) {
-                // ✅ include SI, username, scannedDate
                 finalTxtBuffer
                         .append(poNo).append(",")
                         .append(model.getSku()).append(",")
                         .append(pc).append(",")
-                        .append(model.getSiNum()).append(",")
-                        .append(model.getUsername()).append(",")
-                        .append(model.getScannedDate()).append("\n");
+                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append(",")
+                        .append(model.getPas1Date() != null ? model.getPas1Date() : "").append(",")
+                        .append(model.getPas2Username() != null ? model.getPas2Username() : "").append(",")
+                        .append(model.getPas2Date() != null ? model.getPas2Date() : "").append("\n");
                 receiptBuilder
                         .append(model.getSku()).append(",'")
                         .append(model.getBarcode()).append(",")
@@ -395,8 +394,7 @@ public final class ReportService {
                     .append(pas1Box).append(",")
                     .append(expBox - pas1Box).append(",")
                     .append(pas2Box).append(",")
-                    .append(expBox - pas2Box)
-                    .append("\n");
+                    .append(expBox - pas2Box).append(",");
 
             reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
             if (model.getPas1() != 0 || model.getPas2() != 0 || model.getPas3() != 0) {
@@ -435,6 +433,10 @@ public final class ReportService {
                 .append("Rundate : ").append(date).append("\n")
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
                 .append("SI # : ").append(siNum).append("\n")
+                .append("P1 User : ").append(allData.size() > 0 && allData.get(0).getPas1Username() != null ? allData.get(0).getPas1Username() : "").append("\n")
+                .append("P1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
+                .append("P2 User : ").append(allData.size() > 0 && allData.get(0).getPas2Username() != null ? allData.get(0).getPas2Username() : "").append("\n")
+                .append("P2 Date : ").append(allData.size() > 0 && allData.get(0).getPas2Date() != null ? allData.get(0).getPas2Date() : "").append("\n")
                 .append("TOTAL SKU with COUNT : ").append(totalScannedSku).append("\n")
                 .append("EXPECTED TOTAL BOXES : ").append(totalBoxExpected).append("\n")
                 .append("TOTAL BOX : ").append(totalScannedBox).append("\n")
@@ -452,7 +454,7 @@ public final class ReportService {
                 .append(totalPas1Diff).append(",")
                 .append(totalPas2Box).append(",")
                 .append(totalPas2Diff).append("\n")
-                .append("Item No,SKU,Barcode,Description,Pas1,Pas2,Pas3,Mat Flg,Final Qty,Order,Diff,PO Box,Pas1 box,Pas1 Diff,Pas2 box,Pas2 Diff\n")
+                .append("Item No,SKU,Barcode,Description,Pas1,Pas2,Pas3,Mat Flg,Final Qty,Order,Diff,PO Box,Pas1 box,Pas1 Diff,Pas2 box,Pas2 Diff,P1 User\n")
                 .toString();
 
         amModel.setReport(header + reportBodyBuffer);
