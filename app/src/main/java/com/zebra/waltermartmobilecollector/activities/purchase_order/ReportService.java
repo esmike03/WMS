@@ -161,7 +161,7 @@ public final class ReportService {
                     .append(pas1Box).append(",")
                     .append(expBox - pas1Box).append(",")
                     .append(pas2Box).append(",")
-                    .append(expBox - pas2Box).append(",");
+                    .append(expBox - pas2Box).append("\n");
 
             reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
             if (model.getPas1() != 0 || model.getPas2() != 0) {
@@ -394,7 +394,7 @@ public final class ReportService {
                     .append(pas1Box).append(",")
                     .append(expBox - pas1Box).append(",")
                     .append(pas2Box).append(",")
-                    .append(expBox - pas2Box).append(",");
+                    .append(expBox - pas2Box).append("\n");
 
             reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
             if (model.getPas1() != 0 || model.getPas2() != 0 || model.getPas3() != 0) {
