@@ -75,6 +75,15 @@ public final class ReportService {
             if (m.getPas1Date() != null) { p1Date = m.getPas1Date(); break; }
         }
 
+        try {
+            if (p1Date != null && !p1Date.isEmpty()) {
+                p1Date = new java.text.SimpleDateFormat("yyyy/MM/dd")
+                        .format(new java.text.SimpleDateFormat("yyMMdd").parse(p1Date));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         String header = new StringBuffer()
                 .append("Rundate : ").append(date).append("\n")
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
@@ -313,12 +322,29 @@ public final class ReportService {
         String date = "";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
             date = DateTimeFormatter.ofPattern("MM/dd/yyyy").format(LocalDateTime.now());
+        // ✅ Find first non-null username and date
+        String p1User = "";
+        String p1Date = "";
+        for (Model m : allData) {
+            if (m.getPas1Username() != null) { p1User = m.getPas1Username(); break; }
+        }
+        for (Model m : allData) {
+            if (m.getPas1Date() != null) { p1Date = m.getPas1Date(); break; }
+        }
 
+        try {
+            if (p1Date != null && !p1Date.isEmpty()) {
+                p1Date = new java.text.SimpleDateFormat("yyyy/MM/dd")
+                        .format(new java.text.SimpleDateFormat("yyMMdd").parse(p1Date));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String header = new StringBuffer()
                 .append("Rundate : ").append(date).append("\n")
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
-                .append("P1 User : ").append(allData.size() > 0 && allData.get(0).getPas1Username() != null ? allData.get(0).getPas1Username() : "").append("\n")
-                .append("P1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
+                .append("P1 User : ").append(p1User).append("\n")
+                .append("P1 Date : ").append(p1Date).append("\n")
                 .append("TOTAL SKU with COUNT : ").append(totalScannedSku).append("\n")
                 .append("EXPECTED TOTAL BOXES : ").append(totalBoxExpected).append("\n")
                 .append("TOTAL BOX : ").append(totalScannedBox).append("\n")

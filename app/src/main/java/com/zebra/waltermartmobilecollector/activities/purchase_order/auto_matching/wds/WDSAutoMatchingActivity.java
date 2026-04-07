@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -175,11 +175,15 @@ public class WDSAutoMatchingActivity extends BaseActivity {
                 Folders.SCANNED_PO,
                 pas1Filename,
                 (statement, rows) -> {
-                    Model model = Service.getPas3Model(rows.get(1), allData);
-                    if (model != null) {
-                        model.setPas1(rows.get(2));
-                        if (rows.size() > 4) model.setPas1Username(rows.get(4));
-                        if (rows.size() > 5) model.setPas1Date(rows.get(5));
+                    for (Model m : allData) {
+                        if (m.getSku().equals(rows.get(1))) {
+                            m.setPas1(rows.get(2));
+                            if (rows.size() > 4) m.setPas1Username(rows.get(4));
+                            if (rows.size() > 5) m.setPas1Date(rows.get(5));
+
+                            Log.d("FIX_CHECK", "UPDATED: " + m.getPas1Username());
+                            break;
+                        }
                     }
                     return true;
                 }

@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="SI Number"
-            android:inputType="number" />
+            android:inputType="text" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
