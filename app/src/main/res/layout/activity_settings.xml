@@ -40,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="@+id/edtTxtStore"
             app:layout_constraintTop_toBottomOf="@+id/txtFTPLabel">

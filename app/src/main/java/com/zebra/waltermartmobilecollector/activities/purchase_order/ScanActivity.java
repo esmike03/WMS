@@ -47,6 +47,7 @@ public class ScanActivity extends ScanBaseActivity {
 
     private void setKeyListener() {
         si.setFilters(new InputFilter[]{
+                new InputFilter.LengthFilter(30), // ✅ limit to 30 chars
                 (source, start, end, dest, dstart, dend) -> {
                     String filtered = source.toString().replaceAll("[^0-9/]", "");
                     return filtered;

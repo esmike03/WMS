@@ -67,6 +67,19 @@ public class AutoMatchingActivity extends BaseActivity {
         poNo = intent.getStringExtra("po_number");
         edtSI = findViewById(R.id.edtSI);
 
+        edtSI.setFilters(new android.text.InputFilter[]{
+                (source, start, end, dest, dstart, dend) -> {
+                    StringBuilder filtered = new StringBuilder();
+                    for (int i = start; i < end; i++) {
+                        char c = source.charAt(i);
+                        if (Character.isDigit(c) || c == '/') {
+                            filtered.append(c);
+                        }
+                    }
+                    return filtered.length() == end - start ? null : filtered;
+                }
+        });
+
         allData = Service.getPerPOWithDescWithPas3(poNo);
 
         ((TextView) findViewById(R.id.txtPO)).setText(poNo);
@@ -131,13 +144,13 @@ public class AutoMatchingActivity extends BaseActivity {
 //                    reportFolder + poNo + "_Final.txt"
 //            );
 
-            FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt()); // ← overwrites with get()
-            FTP.upload(reportFolder + poNo + "_Receipt.csv", amModel.getReceipt());
-            FTP.upload(reportFolder + poNo + "_Report_Matched.csv", amModel.getReport());
+            FTP.upload(reportFolder + "RCR_" + poNo + "_Final.txt", amModel.getFinalTxt()); // ← overwrites with get()
+            FTP.upload(reportFolder + "RCR_" + poNo + "_Receipt.csv", amModel.getReceipt());
+            FTP.upload(reportFolder + "RCR_" + poNo + "_Report_Matched.csv", amModel.getReport());
         } else {
-            FTP.upload(reportFolder + poNo + "_Report_Unmatched.csv", amModel.getReport());
+            FTP.upload(reportFolder + "RCR_" + poNo + "_Report_Unmatched.csv", amModel.getReport());
         }
-        FTP.upload(reportFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+        FTP.upload(reportFolder + poNo +"RCR_" + "_Report_SKU.csv", amModel.getSkuReport());
 
         if (isMatched) {
             sendToMMS(amModel);
@@ -267,10 +280,10 @@ public class AutoMatchingActivity extends BaseActivity {
     private void saveReport() throws Exception {
         AMModel amModel = ReportService.get(allData, poNo, edtSI.getText().toString().trim());
 
-        FTP.upload(reportFolder + poNo + "_Receipt.csv", amModel.getReceipt());
-        FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt());
-        FTP.upload(reportFolder + poNo + "_Report_Matched.csv", amModel.getReport());
-        FTP.upload(reportFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+        FTP.upload(reportFolder + "RCR_" + poNo + "_Receipt.csv", amModel.getReceipt());
+        FTP.upload(reportFolder + "RCR_" + poNo + "_Final.txt", amModel.getFinalTxt());
+        FTP.upload(reportFolder + "RCR_" + poNo + "_Report_Matched.csv", amModel.getReport());
+        FTP.upload(reportFolder + "RCR_" + poNo + "_Report_SKU.csv", amModel.getSkuReport());
 
         sendToMMS(amModel);
 
@@ -287,10 +300,10 @@ public class AutoMatchingActivity extends BaseActivity {
             FTP.makeMmsDirectory(Folders.MMS_RCR);
             FTP.makeMmsDirectory(mmsFolder);
 
-            FTP.uploadToMMS(mmsFolder + poNo + "_Final.txt", amModel.getFinalTxt());
-            FTP.uploadToMMS(mmsFolder + poNo + "_Receipt.csv", amModel.getReceipt());
-            FTP.uploadToMMS(mmsFolder + poNo + "_Report_Matched.csv", amModel.getReport());
-            FTP.uploadToMMS(mmsFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Final.txt", amModel.getFinalTxt());
+            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Receipt.csv", amModel.getReceipt());
+            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Report_Matched.csv", amModel.getReport());
+            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Report_SKU.csv", amModel.getSkuReport());
 
         } catch (Exception e) {
             showErrorInThread("Matched but failed to send to MMS: " + e.getMessage());
