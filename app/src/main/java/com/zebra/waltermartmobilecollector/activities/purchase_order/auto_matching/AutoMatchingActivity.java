@@ -150,7 +150,7 @@ public class AutoMatchingActivity extends BaseActivity {
         } else {
             FTP.upload(reportFolder + "RCR_" + poNo + "_Report_Unmatched.csv", amModel.getReport());
         }
-        FTP.upload(reportFolder + poNo +"RCR_" + "_Report_SKU.csv", amModel.getSkuReport());
+        FTP.upload(reportFolder + "RCR_" + poNo + "_Report_SKU.csv", amModel.getSkuReport());
 
         if (isMatched) {
             sendToMMS(amModel);
