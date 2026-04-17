@@ -57,16 +57,15 @@
 
     <EditText
         android:id="@+id/edtSI"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_width="332dp"
+        android:layout_height="45dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:inputType="text"
         android:textColor="@color/dark_green"
-        app:layout_constraintStart_toEndOf="@+id/textView256"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textView256" />
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView256"
+        app:layout_constraintStart_toEndOf="@+id/textView256" />
 
     <TextView
         android:id="@+id/txtTotalSKU"

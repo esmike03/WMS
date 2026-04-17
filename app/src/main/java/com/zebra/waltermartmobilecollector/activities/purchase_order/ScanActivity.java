@@ -47,9 +47,9 @@ public class ScanActivity extends ScanBaseActivity {
 
     private void setKeyListener() {
         si.setFilters(new InputFilter[]{
-                new InputFilter.LengthFilter(30), // ✅ limit to 30 chars
+                new InputFilter.LengthFilter(30),
                 (source, start, end, dest, dstart, dend) -> {
-                    String filtered = source.toString().replaceAll("[^0-9/]", "");
+                    String filtered = source.toString().replaceAll("[^a-zA-Z0-9/]", "");
                     return filtered;
                 }
         });
@@ -67,6 +67,11 @@ public class ScanActivity extends ScanBaseActivity {
             si.setVisibility(View.GONE);
             txtSI.setVisibility(View.VISIBLE);
             txtSI.setText("SI Number:  " + s);
+
+            // ✅ Hide keyboard and start scanning
+            hideKeyboard(si);
+            instruction.setText("Start scanning");
+
             return true;
         });
         po.setOnKeyListener((view, i, keyEvent) -> {
@@ -172,8 +177,14 @@ public class ScanActivity extends ScanBaseActivity {
         poNo = p;
         instruction.setText("Start scanning");
         hideKeyboard(po);
-    }
 
+        // ✅ Auto-focus SI field after PO is confirmed
+        si.setVisibility(View.VISIBLE);
+        txtSI.setVisibility(View.GONE);
+        si.setText("");
+        si.requestFocus();
+        si.postDelayed(() -> showKeyboard(si), 150);
+    }
     private boolean poIsProccessed(String folder, String p) throws Exception {
         for (FTPFile file : FTP.getFiles(folder)) {
             if (!file.isFile() && file.getName().equals(p)) return true;
@@ -218,6 +229,24 @@ public class ScanActivity extends ScanBaseActivity {
 
     @Override
     public boolean scanProcess(String data) {
+        if (poNo == null) return true;
+
+        // ✅ Force SI input before scanning
+        String siValue = si.getVisibility() == View.VISIBLE
+                ? si.getText().toString().trim()
+                : txtSI.getText().toString().replace("SI Number:  ", "").trim();
+
+        if (siValue.isEmpty()) {
+            showError("Please enter SI Number first!");
+            si.setVisibility(View.VISIBLE);
+            txtSI.setVisibility(View.GONE);
+            si.requestFocus();
+            si.postDelayed(() -> showKeyboard(si), 150);
+            return false;
+        }
+
+        scannedPO = Service.scannedDetails(poNo, data);
+
         if (poNo == null) return true;
 
         scannedPO = Service.scannedDetails(poNo, data);

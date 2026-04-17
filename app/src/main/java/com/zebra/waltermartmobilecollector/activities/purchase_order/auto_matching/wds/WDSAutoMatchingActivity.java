@@ -176,10 +176,10 @@ public class WDSAutoMatchingActivity extends BaseActivity {
                 pas1Filename,
                 (statement, rows) -> {
                     for (Model m : allData) {
-                        if (m.getSku().equals(rows.get(1))) {
-                            m.setPas1(rows.get(2));
-                            if (rows.size() > 4) m.setPas1Username(rows.get(4));
-                            if (rows.size() > 5) m.setPas1Date(rows.get(5));
+                        if (m.getSku().equals(rows.get(3))) {          // SKU moved to index 3
+                            m.setPas1(rows.get(4));                    // totalQty moved to index 4
+                            if (rows.size() > 5) m.setPas1Username(rows.get(5)); // username moved to index 5
+                            if (rows.size() > 1) m.setPas1Date(rows.get(1));     // lastScannedDate at index 1
 
                             Log.d("FIX_CHECK", "UPDATED: " + m.getPas1Username());
                             break;

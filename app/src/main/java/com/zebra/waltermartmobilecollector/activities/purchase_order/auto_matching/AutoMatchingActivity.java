@@ -68,15 +68,20 @@ public class AutoMatchingActivity extends BaseActivity {
         edtSI = findViewById(R.id.edtSI);
 
         edtSI.setFilters(new android.text.InputFilter[]{
+                // Length limit
+                new android.text.InputFilter.LengthFilter(30),
+
+                // Allowed characters filter
                 (source, start, end, dest, dstart, dend) -> {
                     StringBuilder filtered = new StringBuilder();
                     for (int i = start; i < end; i++) {
                         char c = source.charAt(i);
-                        if (Character.isDigit(c) || c == '/') {
+
+                        if (Character.isLetterOrDigit(c) || c == '/') {
                             filtered.append(c);
                         }
                     }
-                    return filtered.length() == end - start ? null : filtered;
+                    return filtered.length() == end - start ? null : filtered.toString();
                 }
         });
 
@@ -229,16 +234,16 @@ public class AutoMatchingActivity extends BaseActivity {
                 Folders.SCANNED_PO,
                 pas1Filename,
                 (statement, rows) -> {
-                    if (rows.size() > 3 && edtSI.getText().toString().isEmpty()) {
-                        runOnUiThread(() -> edtSI.setText(rows.get(3)));
+                    if (rows.size() > 2 && edtSI.getText().toString().isEmpty()) {
+                        runOnUiThread(() -> edtSI.setText(rows.get(2))); // siNum moved to index 2
                     }
 
-                    Model model = Service.getPas3Model(rows.get(1), allData);
+                    Model model = Service.getPas3Model(rows.get(3), allData); // SKU moved to index 3
                     if (model != null) {
-                        model.setPas1(rows.get(2));
-                        if (rows.size() > 3) model.setSiNum(rows.get(3));
-                        if (rows.size() > 4) model.setPas1Username(rows.get(4));
-                        if (rows.size() > 5) model.setPas1Date(rows.get(5));
+                        model.setPas1(rows.get(4));                                    // totalQty at index 4
+                        if (rows.size() > 2) model.setSiNum(rows.get(2));             // siNum at index 2
+                        if (rows.size() > 5) model.setPas1Username(rows.get(5));      // username at index 5
+                        if (rows.size() > 1) model.setPas1Date(rows.get(1));          // lastScannedDate at index 1
                     }
                     return true;
                 }
@@ -250,12 +255,12 @@ public class AutoMatchingActivity extends BaseActivity {
                 Folders.SCANNED_PO,
                 pas2Filename,
                 (statement, rows) -> {
-                    android.util.Log.d("PAS2", rows.toString()); // ← add this
-                    Model model = Service.getPas3Model(rows.get(1), allData);
+                    android.util.Log.d("PAS2", rows.toString());
+                    Model model = Service.getPas3Model(rows.get(3), allData); // SKU moved to index 3
                     if (model != null) {
-                        model.setPas2(rows.get(2));
-                        if (rows.size() > 4) model.setPas2Username(rows.get(4));
-                        if (rows.size() > 5) model.setPas2Date(rows.get(5));
+                        model.setPas2(rows.get(4));                                    // totalQty at index 4
+                        if (rows.size() > 5) model.setPas2Username(rows.get(5));      // username at index 5
+                        if (rows.size() > 1) model.setPas2Date(rows.get(1));          // lastScannedDate at index 1
                     }
                     return true;
                 }

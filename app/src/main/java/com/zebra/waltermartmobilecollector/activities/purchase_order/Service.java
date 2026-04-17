@@ -202,12 +202,12 @@ public final class Service {
                 String username = c.getString(5) != null ? c.getString(5) : "";
                 String lastScannedDate = c.getString(6) != null ? c.getString(6) : "";
                 stringBuffer
-                        .append(c.getString(0)).append(",")
-                        .append(c.getString(1)).append(",")
-                        .append(totalQty).append(",")
-                        .append(siNum).append(",")
-                        .append(username).append(",")
-                        .append(lastScannedDate).append("\n");
+                        .append(c.getString(0)).append(",")  // PO
+                        .append(lastScannedDate).append(",")  // lastScannedDate
+                        .append(siNum).append(",")            // siNum
+                        .append(c.getString(1)).append(",")   // SKU
+                        .append(totalQty).append(",")         // totalQty
+                        .append(username).append("\n");       // username
             }
 
             if (stringBuffer.length() == 0) return;

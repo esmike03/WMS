@@ -149,12 +149,11 @@ public final class ReportService {
             if (model.getPas1() != 0) {
                 finalTxtBuffer
                         .append(poNo).append(",")
-                        .append(model.getSku()).append(",")
-                        .append(model.getPas1()).append(",")
-                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append(",")
-                        .append(model.getPas1Date() != null ? model.getPas1Date() : "").append(",")
-                        .append(model.getPas2Username() != null ? model.getPas2Username() : "").append(",")
-                        .append(model.getPas2Date() != null ? model.getPas2Date() : "").append("\n");
+                        .append(model.getPas1Date() != null ? model.getPas1Date() : "").append(",")   // lastScannedDate
+                        .append(siNum).append(",")                                                      // siNum
+                        .append(model.getSku()).append(",")                                             // SKU
+                        .append(model.getPas1()).append(",")                                            // totalQty
+                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append("\n"); // username
             }
 
             totalPas1 += model.getPas1();
@@ -283,10 +282,11 @@ public final class ReportService {
             if (pc != 0)
                 finalTxtBuffer
                         .append(poNo).append(",")
-                        .append(model.getSku()).append(",")
-                        .append(pc).append(",")
-                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append(",")  // ← ADD
-                        .append(model.getPas1Date() != null ? model.getPas1Date() : "").append("\n");        // ← ADD
+                        .append(model.getPas1Date() != null ? model.getPas1Date() : "").append(",")   // lastScannedDate
+                        .append(siNum).append(",")                                                      // siNum
+                        .append(model.getSku()).append(",")                                             // SKU
+                        .append(pc).append(",")                                                         // totalQty
+                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append("\n"); // username
 
             totalScannedBox += (pc / model.getFactor());
             totalScannedPcs += pc;
@@ -397,14 +397,24 @@ public final class ReportService {
             totalPcsExpected += model.getPcs();
 
             if (pc != 0) {
+                // ✅ Pas1 line
                 finalTxtBuffer
                         .append(poNo).append(",")
-                        .append(model.getSku()).append(",")
-                        .append(pc).append(",")
-                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append(",")
                         .append(model.getPas1Date() != null ? model.getPas1Date() : "").append(",")
-                        .append(model.getPas2Username() != null ? model.getPas2Username() : "").append(",")
-                        .append(model.getPas2Date() != null ? model.getPas2Date() : "").append("\n");
+                        .append(siNum).append(",")
+                        .append(model.getSku()).append(",")
+                        .append(model.getPas1()).append(",")
+                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append("\n");
+
+                // ✅ Pas2 line
+                finalTxtBuffer
+                        .append(poNo).append(",")
+                        .append(model.getPas2Date() != null ? model.getPas2Date() : "").append(",")
+                        .append(siNum).append(",")
+                        .append(model.getSku()).append(",")
+                        .append(model.getPas2()).append(",")
+                        .append(model.getPas2Username() != null ? model.getPas2Username() : "").append("\n");
+
                 receiptBuilder
                         .append(model.getSku()).append(",'")
                         .append(model.getBarcode()).append(",")
