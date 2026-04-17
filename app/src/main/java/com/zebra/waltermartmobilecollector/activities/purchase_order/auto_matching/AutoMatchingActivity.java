@@ -311,10 +311,17 @@ public class AutoMatchingActivity extends BaseActivity {
             FTP.makeMmsDirectory(rcrFolder);
             FTP.makeMmsDirectory(mmsFolder);
 
+            // Upload all data files first
             FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Final.txt", amModel.getFinalTxt());
             FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Receipt.csv", amModel.getReceipt());
             FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Report_Matched.csv", amModel.getReport());
             FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+
+            // Wait 5 seconds to ensure all files are fully written
+            Thread.sleep(5000);
+
+            // Send blank trigger file to signal completion
+            FTP.uploadToMMS(mmsFolder + "RCR" + poNo + ".trg", "");
 
         } catch (Exception e) {
             showErrorInThread("Matched but failed to send to MMS: " + e.getMessage());
