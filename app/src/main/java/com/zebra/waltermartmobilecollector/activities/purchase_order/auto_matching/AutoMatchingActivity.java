@@ -296,13 +296,19 @@ public class AutoMatchingActivity extends BaseActivity {
 
     private void sendToMMS(AMModel amModel) {
         try {
-            FTP.disconnect(); // ✅ release FTP1 first
-            FTP.loginMMS();   // ✅ connect to MMS
+            FTP.disconnect();
+            FTP.loginMMS();
 
-            String mmsFolder = Folders.MMS_RCR + poNo + "/";
+            String basePath = Globals.getMmsFtpPath();
+            if (basePath == null) basePath = "";
+            if (!basePath.isEmpty() && !basePath.endsWith("/")) basePath += "/";
 
-            FTP.makeMmsDirectory(Folders.MMS_FTP_FOLDER);
-            FTP.makeMmsDirectory(Folders.MMS_RCR);
+            String ftpFolder = basePath + Folders.MMS_FTP_FOLDER;
+            String rcrFolder = basePath + Folders.MMS_RCR;
+            String mmsFolder = basePath + Folders.MMS_RCR + poNo + "/";
+
+            FTP.makeMmsDirectory(ftpFolder);
+            FTP.makeMmsDirectory(rcrFolder);
             FTP.makeMmsDirectory(mmsFolder);
 
             FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Final.txt", amModel.getFinalTxt());
@@ -313,7 +319,7 @@ public class AutoMatchingActivity extends BaseActivity {
         } catch (Exception e) {
             showErrorInThread("Matched but failed to send to MMS: " + e.getMessage());
         } finally {
-            FTP.disconnectMMS(); // ✅ always disconnect MMS when done
+            FTP.disconnectMMS();
         }
     }
 }

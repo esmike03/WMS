@@ -13,7 +13,7 @@ public final class Globals {
 
     public static Model selectedUser;
     public static boolean singleValidation = false, reportMatch = true;
-
+    private static String mmsFtpPath;
     private static String storeCode, ipAddress, ftpUser, ftpPassword, userRole;
 //    public static String poMode = MP2; // "MP2" or "MPO"
     public static String poMode = null; // default
@@ -23,7 +23,7 @@ public final class Globals {
 
     private static String mmsIpAddress, mmsFtpUser, mmsFtpPassword;
 
-
+    public static String getMmsFtpPath() { return mmsFtpPath; }
     public static boolean userIsAdmin() {
         return userRole.equals("Admin");
     }
@@ -101,12 +101,14 @@ public final class Globals {
         mmsIpAddress = null;
         mmsFtpUser = null;
         mmsFtpPassword = null;
+        mmsFtpPath = null;
     }
 
-    public static void setMmsSettings(String ip, String user, String password) {
+    public static void setMmsSettings(String ip, String user, String password, String path) {
         mmsIpAddress = ip;
         mmsFtpUser = user;
         mmsFtpPassword = password;
+        mmsFtpPath = path;
     }
 
 

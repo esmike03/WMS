@@ -12,6 +12,7 @@ import com.zebra.waltermartmobilecollector.services.SettingsService;
 
 public class SettingsActivity extends BaseActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +25,7 @@ public class SettingsActivity extends BaseActivity {
         EditText password = findViewById(R.id.edtTxtFTPPassword);
         RadioButton wds = findViewById(R.id.rbWDS);
 
+
         if (!Globals.isWMS())
             wds.setChecked(true);
         store.setText(Globals.getLocalStoreCode());
@@ -35,6 +37,7 @@ public class SettingsActivity extends BaseActivity {
         EditText mmsIp = findViewById(R.id.edtTxtMMSIP);
         EditText mmsUser = findViewById(R.id.edtTxtMMSUser);
         EditText mmsPassword = findViewById(R.id.edtTxtMMSPassword);
+        EditText mmsPath = findViewById(R.id.edtTxtMMSPath);
 
         if (Globals.getMmsIpAddress() != null)
             mmsIp.setText(Globals.getMmsIpAddress());
@@ -42,6 +45,8 @@ public class SettingsActivity extends BaseActivity {
             mmsUser.setText(Globals.getMmsFtpUser());
         if (Globals.getMmsFtpPassword() != null)
             mmsPassword.setText(Globals.getMmsFtpPassword());
+        if (Globals.getMmsFtpPath() != null)
+            mmsPath.setText(Globals.getMmsFtpPath());
 
         // --- SAVE ALL BUTTON ---
         findViewById(R.id.btnSaveAll).setOnClickListener(v -> {
@@ -84,12 +89,18 @@ public class SettingsActivity extends BaseActivity {
                 return;
             }
 
+            String mmsPathVal = mmsPath.getText().toString().trim();
+            if (mmsPathVal.isEmpty()) {
+                mmsPath.setError("This is required");
+                return;
+            }
+
             try {
                 SettingsService.update(!wds.isChecked(), st, ipadd, u, p);
-                SettingsService.updateMMS(mmsIpVal, mmsUserVal, mmsPasswordVal);
+                SettingsService.updateMMS(mmsIpVal, mmsUserVal, mmsPasswordVal, mmsPathVal);// ✅ 4 args
                 showSuccess("All settings successfully updated.");
-            } catch (Exception _) {
-                showError("Error updating settings!!!");
+            } catch (Exception e) {
+                showError("Error: " + e.getMessage()); // ✅ show actual error
             }
         });
 
@@ -99,9 +110,9 @@ public class SettingsActivity extends BaseActivity {
             Globals.setMmsSettings(
                     mmsIp.getText().toString().trim(),
                     mmsUser.getText().toString().trim(),
-                    mmsPassword.getText().toString().trim()
+                    mmsPassword.getText().toString().trim(),
+                    mmsPath.getText().toString().trim() // ✅
             );
-
             runThread(() -> {
                 // Test FTP1
                 try {

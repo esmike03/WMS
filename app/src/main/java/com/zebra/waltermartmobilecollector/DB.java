@@ -8,7 +8,7 @@ import com.zebra.waltermartmobilecollector.services.Encryptor;
 
 public class DB extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 11;
+    private static final int DB_VERSION = 12;
 
     public DB(Context context) {
         super(context, "waltermart_mobile_collector", null, DB_VERSION);
@@ -131,15 +131,15 @@ public class DB extends SQLiteOpenHelper {
 
         db.execSQL("INSERT INTO users (name,username,password,role) VALUES " +
                 "('SuperAdmin', 'superadmin', '"+password+"', 'Super Admin')");
-        db.execSQL("INSERT INTO settings (masterfile_updated_at, is_wms, store,ip_address,ftp_user,ftp_password,mms_ip_address,mms_ftp_user,mms_ftp_password) VALUES " +
-                "('', 1, '401', '192.168.0.122','ftp-user','1234', '192.168.0.71', 'ftp-user', '1234')");
+        db.execSQL("INSERT INTO settings (masterfile_updated_at, is_wms, store, ip_address, ftp_user, ftp_password, mms_ip_address, mms_ftp_user, mms_ftp_password, mms_ftp_path) VALUES " +
+                "('', 1, '401', '192.168.0.122','ftp-user','1234', '192.168.0.71', 'ftp-user', '1234', '')");
     }
 
     private void updates(SQLiteDatabase db){
         v3(db);
         v5(db);
         v6(db);
-
+        v12(db);
     }
 
     @Override
@@ -154,6 +154,7 @@ public class DB extends SQLiteOpenHelper {
         if (oldVersion < 9) v9(db);
         if (oldVersion < 10) v10(db);
         if (oldVersion < 11) v11(db);
+        if (oldVersion < 12) v12(db);
     }
 
     private void v2(SQLiteDatabase db){
@@ -232,5 +233,9 @@ public class DB extends SQLiteOpenHelper {
 //        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ip_address TEXT DEFAULT ''");
 //        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_user TEXT DEFAULT ''");
 //        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_password TEXT DEFAULT ''");
+    }
+
+    private void v12(SQLiteDatabase db) {
+        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_path TEXT DEFAULT ''");
     }
 }

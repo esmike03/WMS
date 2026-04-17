@@ -128,6 +128,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edtTxtFTPPassword" />
 
+
         <EditText
             android:id="@+id/edtTxtMMSIP"
             android:layout_width="0dp"
@@ -170,6 +171,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edtTxtMMSUser" />
 
+        <EditText
+            android:id="@+id/edtTxtMMSPath"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="MMS FTP PATH (e.g. /rcr/uploads/)"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edtTxtMMSPassword" />
+
         <!-- BUTTONS -->
         <Button
             android:id="@+id/btnSaveAll"
@@ -181,7 +196,8 @@
             android:text="Save All Settings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edtTxtMMSPassword" />
+
+            app:layout_constraintTop_toBottomOf="@+id/edtTxtMMSPath" />
 
         <Button
             android:id="@+id/btnCheckConnection"
