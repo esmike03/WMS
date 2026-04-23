@@ -147,13 +147,17 @@ public final class ReportService {
 
             // ✅ CORRECT
             if (model.getPas1() != 0) {
+                String combinedUser = (model.getPas1Username() != null ? model.getPas1Username() : "")
+                        + "|"
+                        + (model.getPas2Username() != null ? model.getPas2Username() : "");
+
                 finalTxtBuffer
                         .append(poNo).append(",")
-                        .append(model.getPas1Date() != null ? model.getPas1Date() : "").append(",")   // lastScannedDate
-                        .append(siNum).append(",")                                                      // siNum
-                        .append(model.getSku()).append(",")                                             // SKU
-                        .append(model.getPas1()).append(",")                                            // totalQty
-                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append("\n"); // username
+                        .append(model.getPas1Date() != null ? model.getPas1Date() : "").append(",")
+                        .append(siNum).append(",")
+                        .append(model.getSku()).append(",")
+                        .append(model.getPas1()).append(",")
+                        .append(combinedUser).append("\n");
             }
 
             totalPas1 += model.getPas1();
@@ -196,14 +200,31 @@ public final class ReportService {
             tempBuffer.setLength(0);
         }
 
+        String p1User = "";
+        String p1Date = "";
+        String p2User = "";
+        String p2Date = "";
+        for (Model m : allData) {
+            if (m.getPas1Username() != null && !m.getPas1Username().isEmpty()) { p1User = m.getPas1Username(); break; }
+        }
+        for (Model m : allData) {
+            if (m.getPas1Date() != null && !m.getPas1Date().isEmpty()) { p1Date = m.getPas1Date(); break; }
+        }
+        for (Model m : allData) {
+            if (m.getPas2Username() != null && !m.getPas2Username().isEmpty()) { p2User = m.getPas2Username(); break; }
+        }
+        for (Model m : allData) {
+            if (m.getPas2Date() != null && !m.getPas2Date().isEmpty()) { p2Date = m.getPas2Date(); break; }
+        }
+
         String header = new StringBuffer()
                 .append("Rundate : ").append(date).append("\n")
                 .append("PURCHASE ORDER NO : ").append(poNo).append("\n")
                 .append("SI # : ").append(siNum).append("\n")
-                .append("P1 User : ").append(allData.size() > 0 && allData.get(0).getPas1Username() != null ? allData.get(0).getPas1Username() : "").append("\n")
-                .append("S1 Date : ").append(allData.size() > 0 && allData.get(0).getPas1Date() != null ? allData.get(0).getPas1Date() : "").append("\n")
-                .append("P2 User : ").append(allData.size() > 0 && allData.get(0).getPas2Username() != null ? allData.get(0).getPas2Username() : "").append("\n")
-                .append("S2 Date : ").append(allData.size() > 0 && allData.get(0).getPas2Date() != null ? allData.get(0).getPas2Date() : "").append("\n")
+                .append("P1 User : ").append(p1User).append("\n")   // ✅ use variable
+                .append("S1 Date : ").append(p1Date).append("\n")   // ✅ use variable
+                .append("P2 User : ").append(p2User).append("\n")   // ✅ use variable
+                .append("S2 Date : ").append(p2Date).append("\n")   // ✅ use variable
                 .append("TOTAL SKU with COUNT : ").append(totalScannedSku).append("\n")
                 .append("EXPECTED TOTAL BOXES : ").append(totalBoxExpected).append("\n")
                 .append("TOTAL BOX : ").append(totalScannedBox).append("\n")

@@ -64,14 +64,92 @@ public class ScanActivity extends ScanBaseActivity {
                 return true;
             }
 
-            si.setVisibility(View.GONE);
-            txtSI.setVisibility(View.VISIBLE);
-            txtSI.setText("SI Number:  " + s);
+            // ✅ If PO hasn't been confirmed yet, confirm it now
+            if (poNo == null) {
+                String p = po.getText().toString().trim();
+                if (p.isEmpty()) {
+                    po.setError("PO Number is required");
+                    po.requestFocus();
+                    showKeyboard(po);
+                    return true;
+                }
 
-            // ✅ Hide keyboard and start scanning
-            hideKeyboard(si);
-            instruction.setText("Start scanning");
+                if (!Service.isPOExists(p)) {
+                    showError("P.O. not found!!!");
+                    po.requestFocus();
+                    showKeyboard(po);
+                    return true;
+                }
 
+                // ✅ Do the same FTP check logic, then confirm both PO and SI together
+                if (Globals.isWMS()) {
+                    Helper.showLoading();
+                    String finalS = s;
+                    new Thread(() -> {
+                        boolean allowed = true;
+                        try {
+                            FTP.login();
+                            if (!allowToScanPO(p)) {
+                                allowed = false;
+                                showErrorInThread("PO already been processed!!!");
+                                return;
+                            }
+                            if (poIsProccessed(Folders.MATCHED_PO, p)) {
+                                allowed = false;
+                                showErrorInThread("PO already been processed!!!");
+                                return;
+                            }
+                            if (poIsProccessed(Folders.UNMATCHED_PO, p)) {
+                                allowed = false;
+                                showErrorInThread("PO already been processed!!!");
+                            }
+                        } catch (Exception e) {
+                        } finally {
+                            try { FTP.disconnect(); } catch (Exception e) {}
+                            boolean finalAllowed = allowed;
+                            runOnUiThread(() -> {
+                                Helper.closeLoading();
+                                if (finalAllowed) {
+                                    processAfterCheckingPO(p);
+                                    confirmSI(finalS); // ✅ confirm SI after PO
+                                }
+                            });
+                        }
+                    }).start();
+                } else {
+                    Helper.showLoading();
+                    String finalS = s;
+                    new Thread(() -> {
+                        boolean allowed = true;
+                        try {
+                            FTP.login();
+                            if (!allowToScanPOWDS(p)) {
+                                allowed = false;
+                                showErrorInThread("PO already been processed!!!");
+                            }
+                            if (poIsProccessed(Folders.MATCHED_PO, p)) {
+                                allowed = false;
+                                showErrorInThread("PO already been processed!!!");
+                            }
+                        } catch (Exception e) {
+                        } finally {
+                            try { FTP.disconnect(); } catch (Exception e) {}
+                            boolean finalAllowed = allowed;
+                            runOnUiThread(() -> {
+                                Helper.closeLoading();
+                                if (finalAllowed) {
+                                    processAfterCheckingPO(p);
+                                    confirmSI(finalS); // ✅ confirm SI after PO
+                                }
+                            });
+                        }
+                    }).start();
+                }
+                return true;
+            }
+
+            // poNo already set, just confirm SI normally
+            confirmSI(s);
             return true;
         });
         po.setOnKeyListener((view, i, keyEvent) -> {
@@ -207,6 +285,16 @@ public class ScanActivity extends ScanBaseActivity {
 
         return true;
     }
+    private void confirmSI(String s) {
+        si.setVisibility(View.GONE);
+        txtSI.setVisibility(View.VISIBLE);
+        txtSI.setText("SI Number:  " + s);
+        hideKeyboard(si);
+        si.clearFocus();
+        po.clearFocus();
+        instruction.setVisibility(View.VISIBLE);
+        instruction.setText("Start scanning");
+    }
 
     private boolean allowToScanPO(String p) throws Exception {
         int c = 0;
@@ -231,8 +319,8 @@ public class ScanActivity extends ScanBaseActivity {
     public boolean scanProcess(String data) {
         if (poNo == null) return true;
 
-        // ✅ Force SI input before scanning
-        String siValue = si.getVisibility() == View.VISIBLE
+        // Get SI value from whichever view is visible
+        String siValue = (si.getVisibility() == View.VISIBLE)
                 ? si.getText().toString().trim()
                 : txtSI.getText().toString().replace("SI Number:  ", "").trim();
 
@@ -245,10 +333,7 @@ public class ScanActivity extends ScanBaseActivity {
             return false;
         }
 
-        scannedPO = Service.scannedDetails(poNo, data);
-
-        if (poNo == null) return true;
-
+        // ✅ Remove the duplicate call — was called twice before
         scannedPO = Service.scannedDetails(poNo, data);
 
         if (scannedPO == null) {
@@ -265,7 +350,6 @@ public class ScanActivity extends ScanBaseActivity {
         barcode.setText(data);
 
         showDuplicateDialog(scannedPO.getUpdatedQty());
-
         showKeyboard(qty);
         return true;
     }

@@ -134,7 +134,20 @@ public class AutoMatchingActivity extends BaseActivity {
     }
 
     private void saveAutoMatchingReport() throws Exception {
-        AMModel amModel = ReportService.getWithoutPas3(allData, poNo, edtSI.getText().toString().trim());
+        android.util.Log.d("SAVE_AM", "starting saveAutoMatchingReport");
+        String siNum = "";
+        for (Model m : allData) {
+            if (m.getSiNum() != null && !m.getSiNum().isEmpty()) {
+                siNum = m.getSiNum();
+                break;
+            }
+        }
+        android.util.Log.d("SAVE_AM", "siNum=" + siNum);
+
+        AMModel amModel = ReportService.getWithoutPas3(allData, poNo, siNum); // ← no edtSI here
+        android.util.Log.d("SAVE_AM", "finalTxt=" + amModel.getFinalTxt());
+        android.util.Log.d("SAVE_AM", "isMatched=" + amModel.isMatched());
+//        AMModel amModel = ReportService.getWithoutPas3(allData, poNo, edtSI.getText().toString().trim());
         totalBoxExpected = amModel.getTotalBoxExpected();
         totalPcsExpected = amModel.getTotalPcsExpected();
         isMatched = amModel.isMatched();
@@ -230,24 +243,33 @@ public class AutoMatchingActivity extends BaseActivity {
     }
 
     private void getPas1() throws Exception {
-        FTP.downloadAsArraylist(
-                Folders.SCANNED_PO,
-                pas1Filename,
-                (statement, rows) -> {
-                    if (rows.size() > 2 && edtSI.getText().toString().isEmpty()) {
-                        runOnUiThread(() -> edtSI.setText(rows.get(2))); // siNum moved to index 2
+        android.util.Log.d("PAS1_FLOW", "getPas1 starting, filename=" + pas1Filename);
+        try {
+            FTP.downloadAsArraylist(
+                    Folders.SCANNED_PO,
+                    pas1Filename,
+                    (statement, rows) -> {
+                        android.util.Log.d("PAS1_FLOW", "row received: " + rows.toString());
+                        if (rows.size() > 2 && edtSI.getText().toString().isEmpty()) {
+                            runOnUiThread(() -> edtSI.setText(rows.get(2)));
+                        }
+                        Model model = Service.getPas3Model(rows.get(3), allData);
+                        if (model != null) {
+                            model.setPas1(rows.get(4));
+                            if (rows.size() > 2) model.setSiNum(rows.get(2));
+                            if (rows.size() > 5) model.setPas1Username(rows.get(5));
+                            if (rows.size() > 1) model.setPas1Date(rows.get(1));
+                        } else {
+                            android.util.Log.d("PAS1_FLOW", "model NOT found for SKU=" + rows.get(3));
+                        }
+                        return true;
                     }
-
-                    Model model = Service.getPas3Model(rows.get(3), allData); // SKU moved to index 3
-                    if (model != null) {
-                        model.setPas1(rows.get(4));                                    // totalQty at index 4
-                        if (rows.size() > 2) model.setSiNum(rows.get(2));             // siNum at index 2
-                        if (rows.size() > 5) model.setPas1Username(rows.get(5));      // username at index 5
-                        if (rows.size() > 1) model.setPas1Date(rows.get(1));          // lastScannedDate at index 1
-                    }
-                    return true;
-                }
-        );
+            );
+        } catch (Exception e) {
+            android.util.Log.e("PAS1_FLOW", "getPas1 EXCEPTION: " + e.getMessage(), e);
+            throw e;
+        }
+        android.util.Log.d("PAS1_FLOW", "getPas1 done");
     }
 
     private void getPas2() throws Exception {
@@ -312,13 +334,13 @@ public class AutoMatchingActivity extends BaseActivity {
             FTP.makeMmsDirectory(mmsFolder);
 
             // Upload all data files first
-            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Final.txt", amModel.getFinalTxt());
-            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Receipt.csv", amModel.getReceipt());
-            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Report_Matched.csv", amModel.getReport());
-            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+            FTP.uploadToMMS(mmsFolder + "RCR" + poNo + ".csv", amModel.getFinalTxt());
+//            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Receipt.csv", amModel.getReceipt());
+//            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Report_Matched.csv", amModel.getReport());
+//            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Report_SKU.csv", amModel.getSkuReport());
 
             // Wait 5 seconds to ensure all files are fully written
-            Thread.sleep(5000);
+            Thread.sleep(3000);
 
             // Send blank trigger file to signal completion
             FTP.uploadToMMS(mmsFolder + "RCR" + poNo + ".trg", "");

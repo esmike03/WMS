@@ -142,7 +142,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/textView22"
-            app:layout_constraintTop_toBottomOf="@+id/vendor" />
+            app:layout_constraintTop_toBottomOf="@+id/sku"
+            />
+<!--            app:layout_constraintTop_toBottomOf="@+id/vendor" />-->
 
         <TextView
             android:id="@+id/textView22"

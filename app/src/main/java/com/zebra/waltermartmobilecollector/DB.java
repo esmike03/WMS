@@ -210,8 +210,12 @@ public class DB extends SQLiteOpenHelper {
 
 
     private void v8(SQLiteDatabase db){
-        db.execSQL("ALTER TABLE scanned_pos ADD COLUMN main_id INTEGER");
-        db.execSQL("ALTER TABLE scanned_sts ADD COLUMN main_id INTEGER");
+        try {
+            db.execSQL("ALTER TABLE scanned_sts ADD COLUMN si_num TEXT");
+        } catch (Exception e) {}
+        try {
+            db.execSQL("ALTER TABLE scanned_sts ADD COLUMN main_id INTEGER");
+        } catch (Exception e) {}
     }
 
     private void v9(SQLiteDatabase db) {
@@ -236,6 +240,8 @@ public class DB extends SQLiteOpenHelper {
     }
 
     private void v12(SQLiteDatabase db) {
-        db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_path TEXT DEFAULT ''");
+        try {
+            db.execSQL("ALTER TABLE settings ADD COLUMN mms_ftp_path TEXT DEFAULT ''");
+        } catch (Exception e) {}
     }
 }

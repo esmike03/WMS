@@ -109,21 +109,22 @@ public final class FTP {
 
     public static void uploadToMMS(String filepath, String content) throws Exception {
         File tempFile = File.createTempFile("ftpTemp", null);
-
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
         writer.write(content);
         writer.close();
 
+        int lastSlash = filepath.lastIndexOf('/');
+        String directory = lastSlash >= 0 ? filepath.substring(0, lastSlash) : "";
+        String filename = lastSlash >= 0 ? filepath.substring(lastSlash + 1) : filepath;
+
         FileInputStream is = null;
         try {
+            if (!directory.isEmpty())
+                mmsFtp.changeWorkingDirectory(directory);
             is = new FileInputStream(tempFile);
-            mmsFtp.storeFile(filepath, is);
+            mmsFtp.storeFile(filename, is);
         } finally {
-            try {
-                tempFile.delete();
-                is.close();
-            } catch (Exception e) {
-            }
+            try { tempFile.delete(); is.close(); } catch (Exception e) {}
         }
     }
 
