@@ -38,14 +38,14 @@ public class AutoMatchingActivity extends BaseActivity {
     private String reportFolder;
     private boolean isMatched = true, submitted = false, matched = false, hasReportMatched = false;
     private int loopCounter = 0, totalBox = 0, totalPcs = 0, totalSKU=0;
-
+    private String siNum = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto_matching);
 
         backInto = ListActivity.class;
-
+        edtSI = findViewById(R.id.edtSI);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -82,7 +82,7 @@ public class AutoMatchingActivity extends BaseActivity {
 
             checkIfHasReportMatched();
             getAllData();
-
+            runOnUiThread(() -> edtSI.setText(siNum));
             adaptor.setList(allData);
 
             runOnUiThread(() -> {
@@ -107,7 +107,7 @@ public class AutoMatchingActivity extends BaseActivity {
         for (FTPFile file : FTP.getFiles(reportFolder)) {
             if (!file.isFile()) continue;
 
-            if (file.getName().equals(poNo + "_Report_Matched.csv")) {
+            if (file.getName().equals("RCR_" + poNo + "_Report_Matched.csv")) {
                 hasReportMatched = true;
                 break;
             }
@@ -116,18 +116,35 @@ public class AutoMatchingActivity extends BaseActivity {
 
     private void getAllData() throws Exception {
         FTP.loopThroughData(
-                reportFolder + poNo + "_Report_" + (
+                reportFolder + "RCR_" + poNo + "_Report_" + (
                         hasReportMatched ? "M" : "Unm"
                 ) + "atched.csv",
                 line -> {
-                    if (loopCounter < 8) {
-                        loopCounter++;
+//                    if (loopCounter < 8) {
+//                        loopCounter++;
+//                        return;
+//                    }
+//
+//                    String[] cols = line.split(",");
+//                    if (cols.length < 9) return;
+
+                    if (line.startsWith("SI # : ") || line.startsWith("SI # :")) {
+                        siNum = line.replace("SI # :", "").trim();
                         return;
                     }
+
 
                     String[] cols = line.split(",");
                     if (cols.length < 9) return;
 
+                    // Skip header rows — data rows start with a number (item counter)
+                    try {
+                        Integer.parseInt(cols[0].trim());
+                    } catch (NumberFormatException e) {
+                        return; // not a data row, skip it
+                    }
+
+                    if (cols[2] == null || cols[2].length() < 2) return;
                     String sku = cols[1];
                     Model model = new Model(
                             sku,
@@ -223,10 +240,15 @@ public class AutoMatchingActivity extends BaseActivity {
     private void saveReport() throws Exception {
         AMModel amModel = ReportService.get(allData, poNo, edtSI.getText().toString().trim());
 
-        FTP.upload(reportFolder + poNo + "_Receipt.csv", amModel.getReceipt());
-        FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt());
-        FTP.upload(reportFolder + poNo + "_Report_Matched.csv", amModel.getReport());
-        FTP.upload(reportFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+//        FTP.upload(reportFolder + poNo + "_Receipt.csv", amModel.getReceipt());
+//        FTP.upload(reportFolder + poNo + "_Final.txt", amModel.getFinalTxt());
+//        FTP.upload(reportFolder + poNo + "_Report_Matched.csv", amModel.getReport());
+//        FTP.upload(reportFolder + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+
+        FTP.upload(reportFolder + "RCR_" + poNo + "_Receipt.csv", amModel.getReceipt());
+        FTP.upload(reportFolder + "RCR_" + poNo + "_Final.txt", amModel.getFinalTxt());
+        FTP.upload(reportFolder + "RCR_" + poNo + "_Report_Matched.csv", amModel.getReport());
+        FTP.upload(reportFolder + "RCR_" + poNo + "_Report_SKU.csv", amModel.getSkuReport());
     }
 
 }
