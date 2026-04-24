@@ -238,6 +238,7 @@ public class AutoMatchingActivity extends BaseActivity {
                     saveReport();
                     showSuccessInThread("Successfully submitted.");
                     submitted = true;
+                    runOnUiThread(() -> onClickHome(null));
                 }))
                 .show();
     }
@@ -325,25 +326,14 @@ public class AutoMatchingActivity extends BaseActivity {
             if (basePath == null) basePath = "";
             if (!basePath.isEmpty() && !basePath.endsWith("/")) basePath += "/";
 
-            String ftpFolder = basePath + Folders.MMS_FTP_FOLDER;
-            String rcrFolder = basePath + Folders.MMS_RCR;
-            String mmsFolder = basePath + Folders.MMS_RCR + poNo + "/";
-
-            FTP.makeMmsDirectory(ftpFolder);
-            FTP.makeMmsDirectory(rcrFolder);
-            FTP.makeMmsDirectory(mmsFolder);
-
             // Upload all data files first
-            FTP.uploadToMMS(mmsFolder + "RCR" + poNo + ".csv", amModel.getFinalTxt());
-//            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Receipt.csv", amModel.getReceipt());
-//            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Report_Matched.csv", amModel.getReport());
-//            FTP.uploadToMMS(mmsFolder + "RCR_" + poNo + "_Report_SKU.csv", amModel.getSkuReport());
+            FTP.uploadToMMS(basePath + "RCR" + poNo + ".csv", amModel.getFinalTxt());
 
-            // Wait 5 seconds to ensure all files are fully written
-            Thread.sleep(3000);
+            // Wait to ensure file is fully written
+            Thread.sleep(4000);
 
             // Send blank trigger file to signal completion
-            FTP.uploadToMMS(mmsFolder + "RCR" + poNo + ".trg", "");
+            FTP.uploadToMMS(basePath + "RCR" + poNo + ".trg", "");
 
         } catch (Exception e) {
             showErrorInThread("Matched but failed to send to MMS: " + e.getMessage());
@@ -351,4 +341,39 @@ public class AutoMatchingActivity extends BaseActivity {
             FTP.disconnectMMS();
         }
     }
+
+
+//    private void sendToMMS(AMModel amModel) {
+//        try {
+//            FTP.disconnect();
+//            FTP.loginMMS();
+//
+//            String basePath = Globals.getMmsFtpPath();
+//            if (basePath == null) basePath = "";
+//            if (!basePath.isEmpty() && !basePath.endsWith("/")) basePath += "/";
+//
+//            String ftpFolder = basePath + Folders.MMS_FTP_FOLDER;
+//            String rcrFolder = basePath + Folders.MMS_RCR;
+//            String mmsFolder = basePath + Folders.MMS_RCR + poNo + "/";
+//
+//            FTP.makeMmsDirectory(ftpFolder);
+//            FTP.makeMmsDirectory(rcrFolder);
+//            FTP.makeMmsDirectory(mmsFolder);
+//
+//            // Upload all data files first
+//            FTP.uploadToMMS(mmsFolder + "RCR" + poNo + ".csv", amModel.getFinalTxt());
+//
+//
+//            // Wait 5 seconds to ensure all files are fully written
+//            Thread.sleep(3000);
+//
+//            // Send blank trigger file to signal completion
+//            FTP.uploadToMMS(mmsFolder + "RCR" + poNo + ".trg", "");
+//
+//        } catch (Exception e) {
+//            showErrorInThread("Matched but failed to send to MMS: " + e.getMessage());
+//        } finally {
+//            FTP.disconnectMMS();
+//        }
+//    }
 }

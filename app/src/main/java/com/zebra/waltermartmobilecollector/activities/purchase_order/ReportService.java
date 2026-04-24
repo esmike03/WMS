@@ -57,8 +57,9 @@ public final class ReportService {
                     .append(pas1Box).append(",")
                     .append(expBox - pas1Box).append("\n");
 
-            reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
+//            reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
             if (model.getPas1() != 0) {
+                reportBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
                 skuBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
                 skuCounter++;
             }
@@ -147,9 +148,9 @@ public final class ReportService {
 
             // ✅ CORRECT
             if (model.getPas1() != 0) {
-                String combinedUser = (model.getPas1Username() != null ? model.getPas1Username() : "")
-                        + "|"
-                        + (model.getPas2Username() != null ? model.getPas2Username() : "");
+                String p1 = model.getPas1Username() != null ? model.getPas1Username() : "";
+                String p2 = model.getPas2Username() != null ? model.getPas2Username() : "";
+                String combinedUser = p2.isEmpty() ? p1 : p1 + "|" + p2;
 
                 finalTxtBuffer
                         .append(poNo).append(",")
@@ -187,8 +188,9 @@ public final class ReportService {
                     .append(pas2Box).append(",")
                     .append(expBox - pas2Box).append("\n");
 
-            reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
+//            reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
             if (model.getPas1() != 0 || model.getPas2() != 0) {
+                reportBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
                 receiptBuilder
                         .append(model.getSku()).append(",'")
                         .append(model.getBarcode()).append(",")
@@ -300,15 +302,18 @@ public final class ReportService {
             totalBoxExpected += expBox;
             totalPcsExpected += model.getPcs();
 
-            if (pc != 0)
+            if (pc != 0) {
+                String combinedUser = (model.getPas1Username() != null ? model.getPas1Username() : "")
+                        + "|"
+                        + (model.getPas2Username() != null ? model.getPas2Username() : "");
                 finalTxtBuffer
                         .append(poNo).append(",")
                         .append(model.getPas1Date() != null ? model.getPas1Date() : "").append(",")   // lastScannedDate
                         .append(siNum).append(",")                                                      // siNum
                         .append(model.getSku()).append(",")                                             // SKU
                         .append(pc).append(",")                                                         // totalQty
-                        .append(model.getPas1Username() != null ? model.getPas1Username() : "").append("\n"); // username
-
+                        .append(combinedUser).append("\n");
+            }
             totalScannedBox += (pc / model.getFactor());
             totalScannedPcs += pc;
             totalPas1 += model.getPas1();
@@ -332,8 +337,9 @@ public final class ReportService {
                     .append(pas1Box).append(",")
                     .append(expBox - pas1Box).append("\n");
 
-            reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
+//            reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
             if (model.getPas1() != 0 || model.getPas3() != 0) {
+                reportBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
                 skuBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
                 skuCounter++;
             }
@@ -427,14 +433,14 @@ public final class ReportService {
                         .append(model.getPas1()).append(",")
                         .append(model.getPas1Username() != null ? model.getPas1Username() : "").append("\n");
 
-                // ✅ Pas2 line
-                finalTxtBuffer
-                        .append(poNo).append(",")
-                        .append(model.getPas2Date() != null ? model.getPas2Date() : "").append(",")
-                        .append(siNum).append(",")
-                        .append(model.getSku()).append(",")
-                        .append(model.getPas2()).append(",")
-                        .append(model.getPas2Username() != null ? model.getPas2Username() : "").append("\n");
+//                // ✅ Pas2 line
+//                finalTxtBuffer
+//                        .append(poNo).append(",")
+//                        .append(model.getPas2Date() != null ? model.getPas2Date() : "").append(",")
+//                        .append(siNum).append(",")
+//                        .append(model.getSku()).append(",")
+//                        .append(model.getPas2()).append(",")
+//                        .append(model.getPas2Username() != null ? model.getPas2Username() : "").append("\n");
 
                 receiptBuilder
                         .append(model.getSku()).append(",'")
@@ -471,8 +477,9 @@ public final class ReportService {
                     .append(pas2Box).append(",")
                     .append(expBox - pas2Box).append("\n");
 
-            reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
+//            reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
             if (model.getPas1() != 0 || model.getPas2() != 0 || model.getPas3() != 0) {
+                reportBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
                 skuBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
                 skuCounter++;
             }
