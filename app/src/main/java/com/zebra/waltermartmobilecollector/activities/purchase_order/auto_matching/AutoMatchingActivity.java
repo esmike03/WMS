@@ -153,7 +153,7 @@ public class AutoMatchingActivity extends BaseActivity {
         isMatched = amModel.isMatched();
 
         reportFolder = (isMatched ? Folders.MATCHED_PO : Folders.UNMATCHED_PO) + poNo + "/";
-
+        if (pas1Filename != null) moveFiles();
         FTP.getFtp().makeDirectory(reportFolder);
         moveFiles();
         if (isMatched) {
@@ -244,6 +244,7 @@ public class AutoMatchingActivity extends BaseActivity {
     }
 
     private void getPas1() throws Exception {
+        if (pas1Filename == null) return;
         android.util.Log.d("PAS1_FLOW", "getPas1 starting, filename=" + pas1Filename);
         try {
             FTP.downloadAsArraylist(

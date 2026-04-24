@@ -161,8 +161,12 @@ public final class ReportService {
                         .append(combinedUser).append("\n");
             }
 
-            totalPas1 += model.getPas1();
-            totalPas2 += model.getPas2();
+//            totalPas1 += model.getPas1();
+//            totalPas2 += model.getPas2();
+                totalScannedBox += (model.getPas1() / model.getFactor());
+                totalScannedPcs += model.getPas1();
+                totalPas1 += model.getPas1();
+                totalPas2 += model.getPas2();
 
             tempBuffer
                     .append(model.getSku()).append(",")
@@ -314,8 +318,10 @@ public final class ReportService {
                         .append(pc).append(",")                                                         // totalQty
                         .append(combinedUser).append("\n");
             }
-            totalScannedBox += (pc / model.getFactor());
-            totalScannedPcs += pc;
+//            totalScannedBox += (pc / model.getFactor());
+//            totalScannedPcs += pc;
+            totalScannedBox += (model.getPas1() / model.getFactor());
+            totalScannedPcs += model.getPas1();
             totalPas1 += model.getPas1();
             totalPas3 += model.getPas3();
 
@@ -449,8 +455,10 @@ public final class ReportService {
                         .append(pc).append("\n");
             }
 
-            totalScannedBox += (pc / model.getFactor());
-            totalScannedPcs += pc;
+//            totalScannedBox += (pc / model.getFactor());
+//            totalScannedPcs += pc;
+            totalScannedBox += (model.getPas1() / model.getFactor());
+            totalScannedPcs += model.getPas1();
             totalPas1 += model.getPas1();
             totalPas2 += model.getPas2();
             totalPas3 += model.getPas3();
