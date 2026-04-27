@@ -176,7 +176,16 @@ public final class ReportService {
                     .append(model.getPas2()).append(",")
                     .append("0,");
 
-            if (model.getPas1() != 0 || model.getPas2() != 0) {
+//            if (model.getPas1() != 0 || model.getPas2() != 0) {
+//                tempBuffer.append(model.getPas1() == model.getPas2() ? "Y" : "N");
+//                totalScannedSku++;
+//            }
+
+            boolean hasCount = "MPO".equals(Globals.poMode)
+                    ? model.getPas1() != 0
+                    : model.getPas1() != 0 || model.getPas2() != 0;
+
+            if (hasCount) {
                 tempBuffer.append(model.getPas1() == model.getPas2() ? "Y" : "N");
                 totalScannedSku++;
             }
@@ -192,8 +201,12 @@ public final class ReportService {
                     .append(pas2Box).append(",")
                     .append(expBox - pas2Box).append("\n");
 
-//            reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
-            if (model.getPas1() != 0 || model.getPas2() != 0) {
+
+            boolean isScanned = "MPO".equals(Globals.poMode)
+                    ? model.getPas1() != 0
+                    : model.getPas1() != 0 || model.getPas2() != 0;
+
+            if (isScanned) {
                 reportBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
                 receiptBuilder
                         .append(model.getSku()).append(",'")
@@ -203,6 +216,18 @@ public final class ReportService {
                 skuBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
                 skuCounter++;
             }
+//            reportBodyBuffer.append(i + 1).append(",").append(tempBuffer);
+            //MP2
+//            if (model.getPas1() != 0 || model.getPas2() != 0) {
+//                reportBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
+//                receiptBuilder
+//                        .append(model.getSku()).append(",'")
+//                        .append(model.getBarcode()).append(",")
+//                        .append(model.getDesc()).append(",")
+//                        .append(model.getPas1()).append("\n");
+//                skuBodyBuffer.append(skuCounter).append(",").append(tempBuffer);
+//                skuCounter++;
+//            }
             tempBuffer.setLength(0);
         }
 
@@ -248,7 +273,10 @@ public final class ReportService {
                 .append(totalPas1Diff).append(",")
                 .append(totalPas2Box).append(",")
                 .append(totalPas2Diff).append("\n")
-                .append("Item No,SKU,Barcode,Description,Pas1,Pas2,Pas3,Mat Flg,Final Qty,Order,Diff,PO Box,Pas1 box,Pas1 Diff,Pas2 box,Pas2 Diff\n")
+                .append("MPO".equals(Globals.poMode)
+                        ? "Item No,SKU,Barcode,Description,Pas1,Pas0,Pas3,Mat Flg,Final Qty,Order,Diff,PO Box,Pas1 box,Pas1 Diff,Pas0 box,Pas0 Diff\n"
+                        : "Item No,SKU,Barcode,Description,Pas1,Pas2,Pas3,Mat Flg,Final Qty,Order,Diff,PO Box,Pas1 box,Pas1 Diff,Pas2 box,Pas2 Diff\n")
+//                .append("Item No,SKU,Barcode,Description,Pas1,Pas2,Pas3,Mat Flg,Final Qty,Order,Diff,PO Box,Pas1 box,Pas1 Diff,Pas2 box,Pas2 Diff\n")
                 .toString();
 
         if (amModel.isMatched()) {
@@ -544,7 +572,10 @@ public final class ReportService {
                 .append(totalPas1Diff).append(",")
                 .append(totalPas2Box).append(",")
                 .append(totalPas2Diff).append("\n")
-                .append("Item No,SKU,Barcode,Description,Pas1,Pas2,Pas3,Mat Flg,Final Qty,Order,Diff,PO Box,Pas1 box,Pas1 Diff,Pas2 box,Pas2 Diff,P1 User\n")
+                .append("MPO".equals(Globals.poMode)
+                        ? "Item No,SKU,Barcode,Description,Pas1,Pas0,Pas3,Mat Flg,Final Qty,Order,Diff,PO Box,Pas1 box,Pas1 Diff,Pas0 box,Pas0 Diff,P1 User\n"
+                        : "Item No,SKU,Barcode,Description,Pas1,Pas2,Pas3,Mat Flg,Final Qty,Order,Diff,PO Box,Pas1 box,Pas1 Diff,Pas2 box,Pas2 Diff,P1 User\n")
+//                .append("Item No,SKU,Barcode,Description,Pas1,Pas2,Pas3,Mat Flg,Final Qty,Order,Diff,PO Box,Pas1 box,Pas1 Diff,Pas2 box,Pas2 Diff,P1 User\n")
                 .toString();
 
         amModel.setReport(header + reportBodyBuffer);
